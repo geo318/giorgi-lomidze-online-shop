@@ -111,21 +111,21 @@ class Header extends React.Component {
         const currencyDropdown = this.state.currencies
             ? this.state.currencies.map((e, i) => (
                 <li
-                    key={i}
-                    id={e['label']}
-                    className={e['symbol'] === this.state.symbol ? 'cur_line active' : 'cur_line'}
-                    onClick={() => { this.currencyHandle(e['label']); this.symbolHandle(e['symbol']); } }
+                    key={ i }
+                    id={ e['label'] }
+                    className={ e['symbol'] === this.state.symbol ? 'cur_line active' : 'cur_line' }
+                    onClick={ () => { this.currencyHandle(e['label']); this.symbolHandle(e['symbol']); } }
                 >
-                    <span className='symbol'>{e['symbol']}</span>
-                    <span className='label'>{e['label']}</span>
+                    <span className='symbol'>{ e['symbol'] }</span>
+                    <span className='label'>{ e['label'] }</span>
                 </li>
             ))
             : <div>loading...</div>;
 
         const categoryMenu = this.state.categories
             ? this.state.categories.map((e, i) => (
-                <div className={this.props.activeCategory === e['name'] ? 'cat act' : 'cat'} key={i} id={e['name']} onClick={() => this.categoryHandle(e['name'])}>
-                    <span>{e['name']}</span>
+                <div className={ this.props.activeCategory === e['name'] ? 'cat act' : 'cat' } key={ i } id={ e['name']} onClick={() => this.categoryHandle(e['name']) }>
+                    <span>{ e['name'] }</span>
                 </div>
             ))
             : <div>loading...</div>;
@@ -150,6 +150,7 @@ class Header extends React.Component {
                             <div className='cart flx'
                                 onClick={ ()=> this.dropBag }
                             >
+                                { this.props.cartItemNum == null ? null : <span className = 'num'>{ this.props.cartItemNum }</span> }
                                 { 
                                     <CartSVG fill="#43464E"/> 
                                 }

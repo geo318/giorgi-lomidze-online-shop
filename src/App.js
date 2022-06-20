@@ -10,12 +10,30 @@ class App extends React.Component {
     category : 'all',
     currency : 'USD',
     newContent: 'old',
-    cart: []
+    cart: [],
+    cartItemNum: null
+    
   }
 
   addToCart = productId => {
-    if(!this.state.cart.includes(productId))
-    this.setState({cart: [...this.state.cart, productId]})
+    let productNum;
+    let cartArray = this.state.cart;
+    if(this.state.cart.every((e) => productId !== e['id'])) {
+      productNum = 1;
+      this.setState({cart: [ ...cartArray, {id : productId, num : productNum} ]})
+    } else {
+      let indx = cartArray.findIndex((e) => productId === e['id']);
+      productNum = cartArray[indx]['num'] + 1;
+      this.setState({cart: [...cartArray.slice(0, indx),...cartArray.slice(indx + 1), {id : productId, num : productNum} ]})
+    }
+    
+    this.setState( {
+      cartItemNum : this.state.cart.reduce(
+        (total, curr) => { 
+          total += curr['num'] 
+          return total
+        }, 1) 
+      } )
   }
 
   categoryFilter = setCategory => {
@@ -33,9 +51,9 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <Header categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>
+        <Header cartItemNum = {this.state.cartItemNum} categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>
+        {console.log(this.state.cartItemNum)}
         <Router>
-          {console.log(this.state.cart)}
           <Routes>
             <Route path='/Home' element={<Category addToCart = {this.addToCart} app = {this.state} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
           </Routes>
