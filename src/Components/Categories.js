@@ -1,5 +1,7 @@
 import React from 'react';
 import fetchQuery from './fetchQuery';
+import CartSVG from '../icons/cartSVG';
+import Header from './header';
 
 const ProductsQuery = `
     query getProducts($cat: String!){
@@ -7,16 +9,8 @@ const ProductsQuery = `
             products{
                 id
                 name
-                brand
                 gallery
                 inStock
-                attributes{
-                    type
-                    name
-                    items{
-                        value
-                    }
-                }
                 prices{
                     currency{
                         symbol
@@ -36,27 +30,28 @@ class Category extends React.Component {
             activeCategory : this.props.activeCategory,
             categories: [],
             data : [],
-            _isMounted : false
+            _isMounted : false,
+            hoverId : null
         }
         this.productsFetch = this.productsFetch.bind(this);
         this.switchCurrency = this.switchCurrency.bind(this);
+        this.cardHover = this.cardHover.bind(this);
+        this.addToCart = this.addToCart.bind(this);
     }
 
-      productsFetch(category) {
+    productsFetch(category) {
         fetchQuery(ProductsQuery, {cat : category})
         .then(data => {
-            this.setState( {data : data['data']} )
+            //loading spinner simulation?????????????????????????????????????????????????
+            setTimeout(() =>
+                this.setState( {data : data['data']} ), 500
+            )
         })
     }
 
     componentDidMount() {
         this.productsFetch(this.state.activeCategory)
     }
-
-    // componentWillReceiveProps(nextProps) {
-    //     if (nextProps.activeCategory !== this.state.activeCategory)
-    //     this.setState({ activeCategory: nextProps.activeCategory })
-    // }
 
     static getDerivedStateFromProps(props, state) {
         if(props.activeCategory !== state.activeCategory){
@@ -91,19 +86,40 @@ class Category extends React.Component {
         }
     }
 
+    cardHover(id) {
+        return (
+            <div className='hover_cart' onClick={() => this.addToCart(id)}>
+               { <CartSVG fill="#fff"/> }
+            </div>
+        )
+    }
+
+    addToCart(id) {
+        this.props.addToCart(id)
+    }
+
     render() {
         return (
             <> 
                 <div className='main'>
                     <div className='wrapper'>
+                        <h2 className='g_h2'>{this.state.activeCategory}</h2>
+
                         <div className='gallery'>
                             {
                                 this.state.data['category']?.['products']
                                 ? this.state.data['category']['products'].map((e,i) => (
                                      
-                                        <div key = {e['id']} className={ i % 3 === 0 ? "product_wrap no_padding" : "product_wrap"}>
+                                        <div 
+                                            key = {e['id']} 
+                                            className = { `${e.inStock === false ? "noStock" : ""} ${i % 3 === 0 ? "product_wrap no_padding" : "product_wrap"}`}
+                                            onMouseEnter = { ()=> this.setState({hoverId : e['id']}) }
+                                            onMouseLeave = { ()=> this.setState({hoverId :null}) }
+                                        >
                                             <div className = "img_wrap">
                                                 <img src={e['gallery'][0]} alt={e['name']}/>
+                                                { e.inStock === false ? <div className="outOfStock flx">out of stock</div> : null }
+                                                { e['id'] === this.state.hoverId && e.inStock === true ? this.cardHover(e['id']) : null }
                                             </div>
                                             <div className="desc">
                                                 <p>{e['name']}</p>
@@ -115,7 +131,7 @@ class Category extends React.Component {
                                         </div>
                                     
                                 ))
-                                : "...loading"
+                                : <div>...loading</div>
                             }
                         </div>
 
@@ -128,6 +144,7 @@ class Category extends React.Component {
                                 : <div>loading...</div>
                             }
                         </div>
+
                     </div>
                 </div>
             </>
