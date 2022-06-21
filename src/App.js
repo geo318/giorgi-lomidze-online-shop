@@ -54,14 +54,29 @@ class App extends React.Component {
     this.setState({ newContent: className })
   }
 
+  switchCurrency(cur) {
+    switch(cur) {
+        case "GBP": 
+            return '1'
+        case "AUD": 
+            return '2'
+        case "JPY": 
+            return '3'
+        case "RUB": 
+            return '4'
+        default:
+            return '0'
+    }
+  }
+  
   render() {
     return (
       <>
         <Router>
         <Header cartItemNum = {this.state.cartItemNum} categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>
           <Routes>
-            <Route path='/home' element={<Category addToCart = {this.addToCart} app = {this.state} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
-            <Route path='/cart' element={<Cart cart = {this.state.cart}/>} />
+            <Route path='/home' element={<Category addToCart = {this.addToCart} app = {this.state} switchCurrency = {this.switchCurrency} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
+            <Route path='/cart' element={<Cart cart = {this.state.cart} switchCurrency = {this.switchCurrency} activeCurrency = {this.state.currency}/>} />
           </Routes>
         </Router>
       </>

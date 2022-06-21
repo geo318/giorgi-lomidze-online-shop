@@ -30,6 +30,7 @@ class Category extends React.Component {
             activeCategory : this.props.activeCategory,
             categories: [],
             data : [],
+            _isMounted : false,
             hoverId : null
         }
         this.productsFetch = this.productsFetch.bind(this);
@@ -123,8 +124,8 @@ class Category extends React.Component {
                                             <div className="desc">
                                                 <p>{e['name']}</p>
                                                 <div>
-                                                    <span>{e['prices'][this.switchCurrency(this.props.activeCurrency)]['currency']['symbol']}</span>
-                                                    <span>{e['prices'][this.switchCurrency(this.props.activeCurrency)]['amount']}</span>
+                                                    <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['currency']['symbol']}</span>
+                                                    <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']}</span>
                                                 </div>
                                             </div>
                                         </div>
