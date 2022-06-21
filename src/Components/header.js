@@ -3,6 +3,7 @@ import fetchQuery from './fetchQuery';
 import logo from '../icons/logo.svg'
 import CartSVG from '../icons/cartSVG'
 import arrow from '../icons/arrow.svg'
+import {BrowserRouter as Router, Link} from 'react-router-dom'
 
 const categoriesQuery = `
     query {
@@ -102,7 +103,6 @@ class Header extends React.Component {
         this.animate()
     }
 
-
     dropBag() {
 
     }
@@ -124,12 +124,11 @@ class Header extends React.Component {
 
         const categoryMenu = this.state.categories
             ? this.state.categories.map((e, i) => (
-                <div className={ this.props.activeCategory === e['name'] ? 'cat act' : 'cat' } key={ i } id={ e['name']} onClick={() => this.categoryHandle(e['name']) }>
+                <Link to = "/home" className={ this.props.activeCategory === e['name'] ? 'cat act' : 'cat' } key={ i } id={ e['name']} onClick={() => { this.categoryHandle(e['name']);} }>
                     <span>{ e['name'] }</span>
-                </div>
+                </Link>
             ))
             : <div>loading...</div>;
-
         return (
             <> 
                 <div className='header'>

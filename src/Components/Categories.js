@@ -30,7 +30,6 @@ class Category extends React.Component {
             activeCategory : this.props.activeCategory,
             categories: [],
             data : [],
-            _isMounted : false,
             hoverId : null
         }
         this.productsFetch = this.productsFetch.bind(this);

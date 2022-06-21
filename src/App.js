@@ -1,7 +1,8 @@
 import React from 'react';
 import './css/App.css';
 import Header from './Components/header';
-import Category from './Components/Categories';
+import Category from './Components/categories';
+import Cart from './Components/cart';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 
 class App extends React.Component {
@@ -10,7 +11,12 @@ class App extends React.Component {
     category : 'all',
     currency : 'USD',
     newContent: 'old',
-    cart: [],
+    cart: [
+      {id: 'huarache-x-stussy-le', num: 6},
+      {id: 'jacket-canada-goosee', num: 4},
+      {id: 'apple-imac-2021', num: 2},
+      {id: 'apple-iphone-12-pro', num: 2},
+    ],
     cartItemNum: null
     
   }
@@ -51,11 +57,11 @@ class App extends React.Component {
   render() {
     return (
       <>
-        <Header cartItemNum = {this.state.cartItemNum} categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>
-        {console.log(this.state.cartItemNum)}
         <Router>
+        <Header cartItemNum = {this.state.cartItemNum} categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>
           <Routes>
-            <Route path='/Home' element={<Category addToCart = {this.addToCart} app = {this.state} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
+            <Route path='/home' element={<Category addToCart = {this.addToCart} app = {this.state} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
+            <Route path='/cart' element={<Cart cart = {this.state.cart}/>} />
           </Routes>
         </Router>
       </>

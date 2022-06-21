@@ -1,5 +1,10 @@
 * {
   box-sizing: border-box;
+
+}
+:root {
+  --c-text: #1D1F22;
+  --c-primary: #5ECE7B;
 }
 
 ul {
@@ -8,9 +13,9 @@ ul {
   padding: 0;
 }
 
-:root {
-  --c-text: #1D1F22;
-  --c-primary: #5ECE7B;
+a {
+  color: inherit;
+  text-decoration: none;
 }
 
 h2 {
