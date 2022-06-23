@@ -1,5 +1,6 @@
 import React, {Component} from "react";
 import fetchQuery from './fetchQuery';
+import Carousel from "./carousel";
 
 const ProductDetailsQuery = `
     query getProduct($product : String!){
@@ -40,14 +41,13 @@ export default class Cart extends Component {
     }
 
     componentDidMount() {
-        if (!this.props.cart.isFetching) {
-            let array = [];
-            this.props.cart.forEach((e) => {
-                array.push(fetchQuery(ProductDetailsQuery, {product : e['id']}))
-            })
 
-            Promise.all(array).then(data => this.setState({data : data}))
-        }
+        let array = [];
+        this.props.cart.forEach((e) => {
+            array.push(fetchQuery(ProductDetailsQuery, {product : e['id']}))
+        })
+
+        Promise.all(array).then(data => this.setState({data : data}))
     }
     
 
@@ -56,7 +56,6 @@ export default class Cart extends Component {
         return (
             <>
                 <h3>cart</h3>
-                {console.log(this.state.data)}
                 <div className="cart_products">
                     {
                         cart.map(el => {
@@ -71,11 +70,9 @@ export default class Cart extends Component {
                                     </div>
                                     <div dangerouslySetInnerHTML={{__html: e['description']}}></div>
                                     <div>
-                                        {
-                                            e['gallery'].map((pic, i) => (
-                                                <img key = {i} src={pic} alt={`${e['brand']} ${e['name']}-${i}`}/>
-                                            ))
-                                        }
+                                        <div onClick = {()=> this.props.adjustCartItemNumber(e['id'],+1)}>+</div>
+                                        <Carousel array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
+                                        <div onClick = {()=> this.props.adjustCartItemNumber(e['id'],-1)}>-</div>
                                     </div>
                                     <div>
                                         {

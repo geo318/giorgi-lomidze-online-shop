@@ -33,6 +33,7 @@ class Header extends React.Component {
             currencies: [],
             symbol: "$",
             newContent : this.props.newContent,
+            cartItemNum : this.props.cartItemNum,
             currencyDrop: {display: "none",visibility: "hidden"},
         }
         this.categoryHandle = this.categoryHandle.bind(this);
@@ -42,7 +43,7 @@ class Header extends React.Component {
         this.dropperHide = this.dropperHide.bind(this);
         this.animate = this.animate.bind(this);
     }
-
+    
     symbolHandle(val) {
         this.setState({symbol : val})
     }
@@ -85,15 +86,18 @@ class Header extends React.Component {
     }
 
     animate() {
-        this.props.changeDetect("new")
+        this.props.detectNewContent("new")
         setTimeout(()=> {
-            this.props.changeDetect("old")
+            this.props.detectNewContent("old")
         }, 450)
     }
 
     static getDerivedStateFromProps(props, state) {
         if(props.newContent !== state.newContent){
             return { newContent: props.newContent }
+        }
+        if(props.cartItemNum !== state.cartItemNum){
+            return { cartItemNum: props.cartItemNum }
         }
         return null;
     }
@@ -124,7 +128,7 @@ class Header extends React.Component {
 
         const categoryMenu = this.state.categories
             ? this.state.categories.map((e, i) => (
-                <Link to = "/home" className={ this.props.activeCategory === e['name'] ? 'cat act' : 'cat' } key={ i } id={ e['name']} onClick={() => { this.categoryHandle(e['name']);} }>
+                <Link to = "/" className={ this.props.activeCategory === e['name'] ? 'cat act' : 'cat' } key={ i } id={ e['name']} onClick={() => { this.categoryHandle(e['name']);} }>
                     <span>{ e['name'] }</span>
                 </Link>
             ))
@@ -149,7 +153,7 @@ class Header extends React.Component {
                             <div className='cart flx'
                                 onClick={ ()=> this.dropBag }
                             >
-                                { this.props.cartItemNum == null ? null : <span className = 'num'>{ this.props.cartItemNum }</span> }
+                                { this.state.cartItemNum == null ? null : <span className = 'num'>{ this.state.cartItemNum }</span> }
                                 { 
                                     <CartSVG fill="#43464E"/> 
                                 }
