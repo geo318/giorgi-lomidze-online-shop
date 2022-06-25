@@ -103,8 +103,10 @@ class Header extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevState.symbol !== this.state.symbol)
+        if(prevState.symbol !== this.state.symbol){
         this.animate()
+        this.props.calculateSum()
+        }
     }
 
     dropBag() {
@@ -150,14 +152,14 @@ class Header extends React.Component {
                             </div>
                         </div>
                         <div className='right'>
-                            <div className='cart flx'
-                                onClick={ ()=> this.dropBag }
+                            <Link to = '/cart' className='cart flx'
+                                onClick = { ()=> this.dropBag }
                             >
                                 { this.state.cartItemNum == null ? null : <span className = 'num'>{ this.state.cartItemNum }</span> }
                                 { 
                                     <CartSVG fill="#43464E"/> 
                                 }
-                            </div>
+                            </Link>
                             <div className="currency_switch main_drop" 
                                 onMouseEnter={ ()=>this.dropper(this.state.currencyDrop) }
                                 onMouseLeave={ ()=>this.dropperHide(this.state.currencyDrop) }

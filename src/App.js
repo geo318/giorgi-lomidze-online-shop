@@ -5,6 +5,22 @@ import Category from './Components/categories';
 import Cart from './Components/cart';
 import Error from './Components/error';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
+import fetchQuery from './Components/fetchQuery';
+
+const ProductsPriceQuery = `
+    query getProduct($product : String!){
+        product(id : $product) {
+          id
+          prices {
+            currency{
+              symbol
+              label
+            }
+            amount
+          }
+        }
+    }
+`;
 
 class App extends React.Component {
 
@@ -13,16 +29,51 @@ class App extends React.Component {
     currency : 'USD',
     newContent: 'old',
     cart: [
-      {id: 'huarache-x-stussy-le', num: 6},
-      {id: 'jacket-canada-goosee', num: 4},
-      {id: 'apple-imac-2021', num: 2},
-      {id: 'apple-iphone-12-pro', num: 2},
+      // {id: 'huarache-x-stussy-le', num: 6},
+      // {id: 'jacket-canada-goosee', num: 4},
+      // {id: 'apple-imac-2021', num: 2},
+      // {id: 'apple-iphone-12-pro', num: 2},
     ],
     cartItemNum: 0,
+    prices: [],
+    sumTotal : 0,
   }
 
-  sumCartItems = () => { 
-    let num = this.state.cart.reduce(
+  
+  calculateSum = () => {
+    let sum = this.state.prices.reduce((total,current,i) => total += current.price*this.state.cart[i]['num'], 0)
+    this.setState({ sumTotal: sum })
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if(prevState.currency !== this.state.currency) {
+      this.calculateSum()
+      this.state.cart.forEach((e)=>
+        fetchQuery(ProductsPriceQuery, {product : e.id})
+        .then(data => {
+          let pricesArray = this.state.prices;
+          let indx = pricesArray.findIndex((el) => el.id === e['id'])
+          this.setState(
+          { prices: [...pricesArray.slice(0,indx), {id : e.id, price: data.data['product']['prices'][this.switchCurrency(this.state.currency)]['amount']}, ...pricesArray.slice(indx + 1)] }
+        )}
+      ))
+    }
+  }
+
+  itemPrice = (id, amount) => {
+    let pricesArray = this.state.prices;
+    if(pricesArray.every(e => id !== e.id)) {
+      this.setState({prices: [...pricesArray, {id: id, price : amount}] })
+      return
+    }
+    if(pricesArray.some(e => id === e.id && e.price === amount)) return
+
+      let indx = pricesArray.findIndex((e) => id === e['id'])
+      this.setState({prices: [...pricesArray.slice(0, indx), {id: id, price : amount}, ...pricesArray.slice(indx + 1)] })
+  }
+
+  sumCartItems = (arr) => { 
+    let num = arr.reduce(
       (total, curr) => { 
         total += curr['num'] 
         return total
@@ -30,8 +81,9 @@ class App extends React.Component {
     this.setState( { cartItemNum : num } )
   }
 
-  componentDidMount() { 
-    this.sumCartItems()
+  componentDidMount() {
+    this.sumCartItems(this.state.cart)
+    this.calculateSum()
   }
 
   adjustCartItemNumber = (productId, operation)=> {
@@ -39,7 +91,8 @@ class App extends React.Component {
     let indx = cartArray.findIndex((e) => productId === e['id']);
     let productNum = cartArray[indx]['num'] + operation;
 
-    this.setState({cart: [...cartArray.slice(0, indx),...cartArray.slice(indx + 1), {id : productId, num : productNum} ]});
+    if(productNum === 1) return
+    this.setState({cart: [...cartArray.slice(0, indx),{id : productId, num : productNum},...cartArray.slice(indx + 1) ]});
     this.setState( { cartItemNum : this.state.cartItemNum + operation } )
   }
 
@@ -51,7 +104,7 @@ class App extends React.Component {
     }
     
     this.setState({cart: [ ...cartArray, {id : productId, num : 1} ]});
-    this.sumCartItems();
+    this.setState( { cartItemNum : this.state.cartItemNum + 1 } )
   }
 
   categoryFilter = setCategory => {
@@ -82,15 +135,16 @@ class App extends React.Component {
   }
   
   render() {
+    console.log(this.state.sumTotal)
     return (
       <>
         <Router>
-        <Header cartItemNum = {this.state.cartItemNum} categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} detectNewContent = {this.detectNewContent} newContent = {this.state.newContent}/>      
-          <div class='main'>
-            <div class='wrapper'>
+        <Header calculateSum = {this.calculateSum} cartItemNum = {this.state.cartItemNum} categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} detectNewContent = {this.detectNewContent} newContent = {this.state.newContent}/>      
+          <div className='main'>
+            <div className='wrapper'>
               <Routes>
-                <Route path="/" element={<Category sumCartItems = {this.sumCartItems} addToCart = {this.adjustCartItemNumber} app = {this.state} switchCurrency = {this.switchCurrency} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
-                <Route path="/cart" element={<Cart cart = {this.state.cart} sumCartItems = {this.sumCartItems} adjustCartItemNumber = {this.adjustCartItemNumber} switchCurrency = {this.switchCurrency} activeCurrency = {this.state.currency}/>} />
+                <Route path="/" element={<Category calculateSum = {this.calculateSum} prices = {this.state.prices} itemPrice = {this.itemPrice} sumCartItems = {this.sumCartItems} addToCart = {this.addToCart} app = {this.state} switchCurrency = {this.switchCurrency} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
+                <Route path="/cart" element={<Cart sumTotal = {this.state.sumTotal} prices = {this.state.prices} cart = {this.state.cart} cartItemNum = {this.state.cartItemNum} sumCartItems = {this.sumCartItems} adjustCartItemNumber = {this.adjustCartItemNumber} switchCurrency = {this.switchCurrency} activeCurrency = {this.state.currency}/>} />
                 <Route path="/*" element={<Error/>} />
               </Routes>
             </div>

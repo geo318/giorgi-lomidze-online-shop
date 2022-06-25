@@ -37,25 +37,38 @@ export default class Cart extends Component {
         super(props)
         this.state = {
             data : [],
+            price : [],
+            sumTotal : 0,
         }
     }
 
     componentDidMount() {
-
         let array = [];
         this.props.cart.forEach((e) => {
             array.push(fetchQuery(ProductDetailsQuery, {product : e['id']}))
         })
 
-        Promise.all(array).then(data => this.setState({data : data}))
+        Promise.all(array).then(data => {
+            this.setState({data : data});
+        })
+        //this.props.calculateSum()
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.activeCurrency !== this.props.activeCurrency) {
+           // this.props.calculateSum()
+        }
     }
     
 
     render() {
+        console.table(this.props.prices)
+        console.log(this.props.sumTotal)
         const cart = this.state.data;
+        const tax = 21; //%
         return (
             <>
-                <h3>cart</h3>
+                <h3 key={this.state.prices}>cart{JSON.stringify(this.props.prices)}</h3>
                 <div className="cart_products">
                     {
                         cart.map(el => {
@@ -65,6 +78,9 @@ export default class Cart extends Component {
                                     <div>{e['brand']}</div>
                                     <div>{e['name']}</div>
                                     <div>
+                                        {   
+
+                                        }
                                         <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['currency']['symbol']}</span>
                                         <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']}</span>
                                     </div>
@@ -95,7 +111,11 @@ export default class Cart extends Component {
                          })
                     }
                 </div>
-                <div className="total"></div>
+                <div className="total">
+                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.sumTotal * tax / 100}</span></div>
+                    <div><span>quantity</span><span>{ this.props.cartItemNum }</span></div>
+                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.sumTotal}</span></div>
+                </div>
             </>
         )
     }

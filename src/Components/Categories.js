@@ -36,47 +36,48 @@ class Category extends React.Component {
         this.cardHover = this.cardHover.bind(this);
     }
 
-    productsFetch(category) {
-        fetchQuery(ProductsQuery, {cat : category})
-        .then(data => {
-            //loading spinner simulation?????????????????????????????????????????????????
-            setTimeout(() =>
-                this.setState( {data : data['data']} ), 500
-            )
-        })
+    async productsFetch(category) {
+        await fetchQuery(ProductsQuery, {cat : category})
+        .then(data => this.setState( {data : data['data']} ))
     }
 
     componentDidMount() {
         this.productsFetch(this.state.activeCategory)
     }
-
-    static getDerivedStateFromProps(props, state) {
-        if(props.activeCategory !== state.activeCategory){
-            return { activeCategory: props.activeCategory }
-        }
-        return null;
-    }
-
-    
+   
     componentDidUpdate(prevProps, prevState) {
         this._isMounted = true;
-        if(prevState.activeCategory !== this.state.activeCategory && this._isMounted === true)
-        this.productsFetch(this.props.activeCategory)
+        if(prevState.activeCategory !== this.state.activeCategory && this._isMounted === true) {
+            this.productsFetch(this.props.activeCategory)
+            return
+        }
+
+        if(prevState.activeCurrency !== this.props.activeCurrency) {
+            fetchQuery(ProductsQuery, {cat : 'all'})
+            .then(data => data.data.category.products.forEach(e => {
+                this.props.prices.forEach(el => {
+                    if(e['id'] === el['id'])
+                    this.props.itemPrice(e['id'], e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount'])
+                })
+            }))
+        }
     }
 
     componentWillUnmount() {
         this._isMounted = false;
     }
 
-    cardHover(id) {
+    cardHover(id, amount) {
+        
         return (
-            <div className='hover_cart' onClick={() => this.props.addToCart(id,+1)}>
+            <div className='hover_cart' onClick={() => {this.props.addToCart(id, +1); this.props.itemPrice(id, amount)}}>
                { <CartSVG fill="#fff"/> }
             </div>
         )
     }
 
     render() {
+        console.log(this.props.prices)
         return (
             <> 
                 <h2 className='g_h2'>{this.state.activeCategory}</h2>
@@ -95,7 +96,7 @@ class Category extends React.Component {
                                     <div className = "img_wrap">
                                         <img src={e['gallery'][0]} alt={e['name']}/>
                                         { e.inStock === false ? <div className="outOfStock flx">out of stock</div> : null }
-                                        { e['id'] === this.state.hoverId && e.inStock === true ? this.cardHover(e['id']) : null }
+                                        { e['id'] === this.state.hoverId && e.inStock === true ? this.cardHover(e['id'],e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']) : null }
                                     </div>
                                     <div className="desc">
                                         <p>{e['name']}</p>
