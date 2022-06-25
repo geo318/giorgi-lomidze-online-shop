@@ -45,19 +45,24 @@ class App extends React.Component {
     this.setState({ sumTotal: sum })
   }
 
+
   componentDidUpdate(prevProps, prevState) {
     if(prevState.currency !== this.state.currency) {
-      this.state.cart.forEach((e)=>
-        fetchQuery(ProductsPriceQuery, {product : e.id})
-        .then(data => {
-          let pricesArray = this.state.prices;
-          let indx = pricesArray.findIndex((el) => el.id === e['id'])
-          this.setState(
-          { prices: [...pricesArray.slice(0,indx), {id : e.id, price: data.data['product']['prices'][this.switchCurrency(this.state.currency)]['amount']}, ...pricesArray.slice(indx + 1)] }
-        )}
-      ))
-    }
-  }
+      let array = [];
+      this.state.cart.forEach((e)=> 
+        array.push(fetchQuery(ProductsPriceQuery, {product : e.id}))
+      )
+        
+      Promise.all(array).then(data => {
+        this.setState({prices:[]})
+        let priceArr = [];
+        data.forEach((el)=> {
+          let e = el.data.product
+          priceArr.push({id : e.id, price: e['prices'][this.switchCurrency(this.state.currency)]['amount']})
+        })
+        this.setState({prices : priceArr})
+    })
+  }}
 
   itemPrice = (id, amount) => {
     let pricesArray = this.state.prices;
