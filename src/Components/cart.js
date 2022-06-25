@@ -56,7 +56,7 @@ export default class Cart extends Component {
 
     componentDidUpdate(prevProps, prevState) {
         if(prevProps.activeCurrency !== this.props.activeCurrency) {
-           // this.props.calculateSum()
+           //this.props.calculateSum()
         }
     }
     

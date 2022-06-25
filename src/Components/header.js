@@ -36,8 +36,6 @@ class Header extends React.Component {
             cartItemNum : this.props.cartItemNum,
             currencyDrop: {display: "none",visibility: "hidden"},
         }
-        this.categoryHandle = this.categoryHandle.bind(this);
-        this.currencyHandle = this.currencyHandle.bind(this);
         this.symbolHandle = this.symbolHandle.bind(this);
         this.dropper = this.dropper.bind(this);
         this.dropperHide = this.dropperHide.bind(this);
@@ -47,15 +45,6 @@ class Header extends React.Component {
     symbolHandle(val) {
         this.setState({symbol : val})
     }
-
-    categoryHandle(cat) {
-        this.props.categoryFilter(cat)
-    }
-
-    currencyHandle(cur) {
-        this.props.currencyFilter(cur)
-    }
-
     componentDidMount() {
         fetchQuery(categoriesQuery).then(data => {
             this.setState( {categories : data['data']['categories']} )
@@ -104,8 +93,7 @@ class Header extends React.Component {
 
     componentDidUpdate(prevProps, prevState) {
         if(prevState.symbol !== this.state.symbol){
-        this.animate()
-        this.props.calculateSum()
+            this.animate()
         }
     }
 
@@ -120,7 +108,7 @@ class Header extends React.Component {
                     key={ i }
                     id={ e['label'] }
                     className={ e['symbol'] === this.state.symbol ? 'cur_line active' : 'cur_line' }
-                    onClick={ () => { this.currencyHandle(e['label']); this.symbolHandle(e['symbol']); } }
+                    onClick={ () => { this.props.currencyFilter(e['label']); this.symbolHandle(e['symbol']); } }
                 >
                     <span className='symbol'>{ e['symbol'] }</span>
                     <span className='label'>{ e['label'] }</span>
@@ -130,7 +118,7 @@ class Header extends React.Component {
 
         const categoryMenu = this.state.categories
             ? this.state.categories.map((e, i) => (
-                <Link to = "/" className={ this.props.activeCategory === e['name'] ? 'cat act' : 'cat' } key={ i } id={ e['name']} onClick={() => { this.categoryHandle(e['name']);} }>
+                <Link to = "/" className={ this.props.activeCategory === e['name'] ? 'cat act' : 'cat' } key={ i } id={ e['name']} onClick={() => { this.props.categoryFilter(e['name']);} }>
                     <span>{ e['name'] }</span>
                 </Link>
             ))

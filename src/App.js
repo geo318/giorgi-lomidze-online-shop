@@ -40,14 +40,13 @@ class App extends React.Component {
   }
 
   
-  calculateSum = () => {
-    let sum = this.state.prices.reduce((total,current,i) => total += current.price*this.state.cart[i]['num'], 0)
+  calculateSum = (arr) => {
+    let sum = arr.reduce((total,current,i) => total += current.price*this.state.cart[i]['num'], 0)
     this.setState({ sumTotal: sum })
   }
 
   componentDidUpdate(prevProps, prevState) {
     if(prevState.currency !== this.state.currency) {
-      this.calculateSum()
       this.state.cart.forEach((e)=>
         fetchQuery(ProductsPriceQuery, {product : e.id})
         .then(data => {
@@ -83,7 +82,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.sumCartItems(this.state.cart)
-    this.calculateSum()
   }
 
   adjustCartItemNumber = (productId, operation)=> {
@@ -135,7 +133,6 @@ class App extends React.Component {
   }
   
   render() {
-    console.log(this.state.sumTotal)
     return (
       <>
         <Router>

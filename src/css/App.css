@@ -227,6 +227,7 @@ img {
 
 .hover_cart {
   position: absolute;
+  visibility: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -237,7 +238,10 @@ img {
   right: 15px;
   border-radius: 50%;
 }
-
+.product_wrap:hover
+.hover_cart {
+  visibility: visible;
+}
 .num {
   position: absolute;
   display: flex;
