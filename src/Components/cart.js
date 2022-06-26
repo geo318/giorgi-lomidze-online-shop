@@ -42,6 +42,11 @@ export default class Cart extends Component {
         }
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.cart.length === this.props.cart.length) return
+        this.setState({data : []});
+    }
+
     componentDidMount() {
         let array = [];
         this.props.cart.forEach((e) => {
@@ -51,19 +56,11 @@ export default class Cart extends Component {
         Promise.all(array).then(data => {
             this.setState({data : data});
         })
-        //this.props.calculateSum()
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if(prevProps.activeCurrency !== this.props.activeCurrency) {
-           //this.props.calculateSum()
-        }
-    }
-    
+    }   
 
     render() {
-        console.table(this.props.prices)
-        console.log(this.props.sumTotal)
+        
+        console.log(this.props.calculateSum())
         const cart = this.state.data;
         const tax = 21; //%
         return (
@@ -71,7 +68,7 @@ export default class Cart extends Component {
                 <h3 key={this.state.prices}>cart{JSON.stringify(this.props.prices)}</h3>
                 <div className="cart_products">
                     {
-                        cart.map(el => {
+                        cart.map((el,i) => {
                             let e = el['data']['product']; 
                             return (
                                 <div key={e['id']}>
@@ -85,10 +82,11 @@ export default class Cart extends Component {
                                         <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']}</span>
                                     </div>
                                     <div dangerouslySetInnerHTML={{__html: e['description']}}></div>
+                                    <div>{this.props.cart?.[i]?.['num']}</div>
                                     <div>
-                                        <div onClick = {()=> this.props.adjustCartItemNumber(e['id'],+1)}>+</div>
+                                        <div onClick = {()=> {this.props.adjustCartItemNumber(e['id'],+1); }}>+</div>
                                         <Carousel array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
-                                        <div onClick = {()=> this.props.adjustCartItemNumber(e['id'],-1)}>-</div>
+                                        <div onClick = {()=> {this.props.adjustCartItemNumber(e['id'],-1);}}>-</div>
                                     </div>
                                     <div>
                                         {
@@ -112,9 +110,9 @@ export default class Cart extends Component {
                     }
                 </div>
                 <div className="total">
-                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.sumTotal * tax / 100}</span></div>
+                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.calculateSum() * tax / 100}</span></div>
                     <div><span>quantity</span><span>{ this.props.cartItemNum }</span></div>
-                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.sumTotal}</span></div>
+                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.calculateSum()}</span></div>
                 </div>
             </>
         )

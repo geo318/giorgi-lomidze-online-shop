@@ -143,7 +143,7 @@ class Header extends React.Component {
                             <Link to = '/cart' className='cart flx'
                                 onClick = { ()=> this.dropBag }
                             >
-                                { this.state.cartItemNum == null ? null : <span className = 'num'>{ this.state.cartItemNum }</span> }
+                                { this.state.cartItemNum === 0 ? null : <span className = 'num'>{ this.state.cartItemNum }</span> }
                                 { 
                                     <CartSVG fill="#43464E"/> 
                                 }
