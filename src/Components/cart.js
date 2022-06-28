@@ -43,13 +43,7 @@ export default class Cart extends Component {
         }
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if(prevProps.cart.length === this.props.cart.length) return
-        this.setState({data : []});
-    }
-
     componentDidMount() {
-        console.log(this.state.loading)
         let array = [];
         this.props.cart.forEach((e) => {
             array.push(fetchQuery(ProductDetailsQuery, {product : e['id']}))
@@ -63,13 +57,11 @@ export default class Cart extends Component {
     }   
 
     render() {
-        console.log(this.state.loading)
-        console.log(this.props.calculateSum())
         const cart = this.state.data;
         const tax = 21; // % //
         return (
             <>
-                <h3>cart{JSON.stringify(this.props.prices)}</h3>
+                <h3 className="cart_header">cart</h3>
                 <div className="cart_products">
                     {    
                         this.state.loading
@@ -81,35 +73,42 @@ export default class Cart extends Component {
                             cart.map((el,i) => {
                             let e = el['data']['product']; 
                             return (
-                                <div key={e['id']}>
-                                    <div>{e['brand']}</div>
-                                    <div>{e['name']}</div>
-                                    <div>
-                                        <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['currency']['symbol']}</span>
-                                        <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']}</span>
+                                this.props.cart?.[i]?.['num'] > 0 &&
+                                <div key={e['id']} className='flx'>
+                                    <div className="lft flx-c grow">
+                                        <div className="name">{e['brand']}</div>
+                                        <div className="sub">{e['name']}</div>
+                                        <div className="price">
+                                            <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['currency']['symbol']}</span>
+                                            <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']}</span>
+                                        </div>
+                                        {/* <div dangerouslySetInnerHTML={{__html: e['description']}}></div> */}
+                                        <div className="attr">
+                                            {
+                                                e['attributes'].map((items,i) => (                                                       
+                                                    <div key = {i}>
+                                                        <span className="attr-name">{items['name']}:</span>
+                                                        <ul>
+                                                            {
+                                                                items['items'].map(i => (
+                                                                    <li key = {i['id']} id= {i['id']}>{i['value']}</li>
+                                                                ))
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                ))
+                                            }
+                                        </div>
                                     </div>
-                                    <div dangerouslySetInnerHTML={{__html: e['description']}}></div>
-                                    <div>{this.props.cart?.[i]?.['num']}</div>
-                                    <div>
-                                        <div onClick = {()=> {this.props.adjustCartItemNumber(e['id'],+1); }}>+</div>
-                                        <Carousel array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
-                                        <div onClick = {()=> {this.props.adjustCartItemNumber(e['id'],-1);}}>-</div>
-                                    </div>
-                                    <div>
-                                        {
-                                            e['attributes'].map((items,i) => (                                                       
-                                                <div key = {i}>
-                                                    <span>{items['name']}</span>
-                                                    <ul>
-                                                        {
-                                                            items['items'].map(i => (
-                                                                <li key = {i['id']} id= {i['id']}>{i['value']}</li>
-                                                            ))
-                                                        }
-                                                    </ul>
-                                                </div>
-                                            ))
-                                        }
+                                    <div className="rgt flx">
+                                        <div className="cart-ctr flx flx-c">
+                                            <div className="plus flx flx-hc" onClick = {()=> {this.props.adjustCartItemNumber(e['id'],+1); }}/>
+                                            <div className="cart-num grow flx">{this.props.cart?.[i]?.['num']}</div>
+                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.adjustCartItemNumber(e['id'],-1);}}/>
+                                        </div>
+                                        <div className="carousel">
+                                            <Carousel array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
+                                        </div>
                                     </div>
                                 </div>
                             )})

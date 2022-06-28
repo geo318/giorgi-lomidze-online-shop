@@ -29,12 +29,7 @@ class App extends React.Component {
     category : 'all',
     currency : 'USD',
     newContent: 'old',
-    cart: [
-      // {id: 'huarache-x-stussy-le', num: 6},
-      // {id: 'jacket-canada-goosee', num: 4},
-      // {id: 'apple-imac-2021', num: 2},
-      // {id: 'apple-iphone-12-pro', num: 2},
-    ],
+    cart: [],
     cartItemNum: 0,
     prices: [],
     sumTotal : 0,
@@ -70,13 +65,13 @@ class App extends React.Component {
   itemPrice = (id, amount) => {
     let pricesArray = this.state.prices;
     if(pricesArray.every(e => id !== e.id)) {
-      this.setState({prices: [...pricesArray, {id: id, price : amount}] })
+      this.setState({ prices: [...pricesArray, {id: id, price : amount}] })
       return
     }
     if(pricesArray.some(e => id === e.id && e.price === amount)) return
 
       let indx = pricesArray.findIndex((e) => id === e['id'])
-      this.setState({prices: [...pricesArray.slice(0, indx), {id: id, price : amount}, ...pricesArray.slice(indx + 1)] })
+      this.setState({ prices: [...pricesArray.slice(0, indx), {id: id, price : amount}, ...pricesArray.slice(indx + 1)] })
   }
 
   sumCartItems = (arr) => { 
@@ -99,13 +94,13 @@ class App extends React.Component {
     let productNum = cartArray[indx]['num'] + operation;
 
     if(productNum === 0) {
-      this.setState( { cartItemNum : this.state.cartItemNum + operation } )
-      this.setState({cart: [...cartArray.slice(0, indx),...cartArray.slice(indx + 1) ]});
-      this.setState({prices: [...this.state.prices.slice(0, indx),...this.state.prices.slice(indx + 1) ]});
+      this.setState({ cartItemNum : this.state.cartItemNum + operation });
+      this.setState({ cart: [...cartArray.slice(0, indx),...cartArray.slice(indx + 1) ] });
+      this.setState({ prices: [...this.state.prices.slice(0, indx),...this.state.prices.slice(indx + 1)] });
       return
     }
-    this.setState({cart: [...cartArray.slice(0, indx),{id : productId, num : productNum},...cartArray.slice(indx + 1) ]});
-    this.setState( { cartItemNum : this.state.cartItemNum + operation } )
+    this.setState({ cart: [...cartArray.slice(0, indx),{id : productId, num : productNum},...cartArray.slice(indx + 1) ] });
+    this.setState({ cartItemNum : this.state.cartItemNum + operation })
   }
 
   addToCart = productId => {

@@ -75,6 +75,7 @@ h2 {
   grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 40px;
   grid-row-gap: 103px;
+  margin-bottom: 190px;
 }
 .img_wrap {
   position: relative;
@@ -287,4 +288,160 @@ img {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
   }
+}
+
+.cart_header {
+  font-size: 32px;
+  line-height: 40px;
+  font-weight: 700;
+  color:var(--c-text);
+  text-transform: uppercase;
+}
+
+.flx-c {
+  flex-direction: column;
+}
+
+.flx-hc {
+  justify-content: center;
+}
+
+.grow {
+  flex-grow: 1;
+}
+
+.carousel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  height: 288px;
+  width: 200px;
+}
+.carousel 
+img {
+  max-width: 200px;
+  max-height: 288px;
+}
+
+.c-arr {
+  z-index: 1;
+  position: absolute;
+  user-select: none;
+  bottom: 16px;
+  right: 16px;
+  background-color: rgba(0, 0, 0, 0.73);
+  width: 24px;
+  height: 24px;
+}
+
+.c-arr:hover {
+  cursor: pointer;
+}
+
+.c-arr img {
+  position: absolute;
+  margin-top: 50%;
+  margin-left: 50%;
+  transform: translate(-50%, -50%);
+  height: 12px;
+}
+
+.arrow-left {
+  transform: rotate(-180deg);
+  right: 48px;
+}
+
+.cart-ctr {
+  margin-right: 24px;
+  height: 288px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.plus,
+.minus {
+  position: relative;
+  width: 45px;
+  height: 45px;
+  border: 1px solid var(--c-text);
+}
+.plus:before,
+.plus:after,
+.minus:before {
+  content: '';
+  position: absolute;
+  height: 15px;
+  width: 15px;
+  border-color: 1px solid var(--c-text);
+}
+
+.minus:before,
+.plus:before {
+  border-bottom: 1px solid;
+  top: 6px
+}
+
+.plus::after {
+  border-right: 1px solid;
+  left: 6px
+}
+
+.minus:hover,
+.plus:hover {
+  cursor: pointer;
+  user-select: none;
+}
+
+.cart-num {
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 38px;
+}
+
+.cart_products {
+  border-top: 1px solid #E5E5E5;
+}
+
+.cart_products >
+div {
+  padding: 24px 0;
+}
+
+.lft {
+  justify-content: flex-start;
+}
+
+.name {
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 27px;
+}
+
+.sub {
+  font-size: 30px;
+  font-weight: 400;
+  line-height: 27px;
+  padding-top: 16px;
+}
+
+.price {
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: 700;
+  padding-top: 20px;
+}
+
+.attr {
+  padding-top: 20px;
+}
+
+.attr-name {
+  font-size: 18px;
+  font-size: 18px;
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: 'Roboto Condensed', sans-serif;
 }
