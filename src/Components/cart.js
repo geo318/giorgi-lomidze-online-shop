@@ -85,9 +85,6 @@ export default class Cart extends Component {
                                     <div>{e['brand']}</div>
                                     <div>{e['name']}</div>
                                     <div>
-                                        {   
-
-                                        }
                                         <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['currency']['symbol']}</span>
                                         <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']}</span>
                                     </div>

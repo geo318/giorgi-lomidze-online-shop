@@ -39,8 +39,23 @@ class Category extends React.Component {
         this.setScrollState = this.setScrollState.bind(this);
     }
 
-    async productsFetch(category) {
+    componentDidMount() {
+        this.productsFetch(this.props.activeCategory)
+        this.onScroll()
+    }
 
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.activeCategory !== this.props.activeCategory) {
+            this.setState({data : []})
+            this.productsFetch(this.props.activeCategory)
+            return
+        }
+            
+        if(prevState.page < this.state.page)
+            return this.productsFetch(this.props.activeCategory)
+    }
+
+    async productsFetch(category) {
         await fetchQuery(ProductsQuery, {cat : category})
         .then(data => {
             this.setState({loading : true})
@@ -52,14 +67,8 @@ class Category extends React.Component {
                 this.setState( {data : resultData.slice(0, this.state.page)})
                 
             this.setState({loading : false})
-            }, 600);
-            
-    })
-    }
-
-    componentDidMount() {
-        this.productsFetch(this.props.activeCategory)
-        this.onScroll()
+            }, 600);    
+        })
     }
     
     onScroll() {
@@ -77,23 +86,6 @@ class Category extends React.Component {
 
     setScrollState() {
         this.setState({page : this.state.page + 6})
-    }
-
-    componentDidUpdate(prevProps, prevState) {
-        if(prevProps.activeCategory !== this.props.activeCategory)
-            return this.productsFetch(this.props.activeCategory)
-            
-        if(prevState.page < this.state.page)
-            return this.productsFetch(this.props.activeCategory)
-        // if(prevProps.activeCurrency !== this.props.activeCurrency) {
-        //     fetchQuery(ProductsQuery, {cat : 'all'})
-        //     .then(data => data.data.category.products.forEach(e => {
-        //         this.props.prices.forEach(el => {
-        //             if(e['id'] === el['id'])
-        //             this.props.itemPrice(e['id'], e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount'])
-        //         })
-        //     }))
-        // }
     }
 
     cardHover(id, amount) {
