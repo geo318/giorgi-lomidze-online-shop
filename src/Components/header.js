@@ -23,7 +23,7 @@ const currenciesQuery = `
             label
         }
     }
-`
+`;
 
 class Header extends React.Component {
     constructor(props) {
@@ -32,8 +32,6 @@ class Header extends React.Component {
             categories: [],
             currencies: [],
             symbol: "$",
-            newContent : this.props.newContent,
-            cartItemNum : this.props.cartItemNum,
             currencyDrop: {display: "none",visibility: "hidden"},
         }
         this.symbolHandle = this.symbolHandle.bind(this);
@@ -78,17 +76,7 @@ class Header extends React.Component {
         this.props.detectNewContent("new")
         setTimeout(()=> {
             this.props.detectNewContent("old")
-        }, 450)
-    }
-
-    static getDerivedStateFromProps(props, state) {
-        if(props.newContent !== state.newContent){
-            return { newContent: props.newContent }
-        }
-        if(props.cartItemNum !== state.cartItemNum){
-            return { cartItemNum: props.cartItemNum }
-        }
-        return null;
+        }, 300)
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -143,7 +131,7 @@ class Header extends React.Component {
                             <Link to = '/cart' className='cart flx'
                                 onClick = { ()=> this.dropBag }
                             >
-                                { this.state.cartItemNum === 0 ? null : <span className = 'num'>{ this.state.cartItemNum }</span> }
+                                { this.props.cartItemNum > 0 && <span className = 'num'>{ this.props.cartItemNum }</span> }
                                 { 
                                     <CartSVG fill="#43464E"/> 
                                 }
@@ -153,10 +141,10 @@ class Header extends React.Component {
                                 onMouseLeave={ ()=>this.dropperHide(this.state.currencyDrop) }
                             >
                                 <div className='drop_curr'>
-                                    <span className = {`curr_symbol ${this.state.newContent}`}>{ this.state.symbol }</span>
+                                    <span className = {`curr_symbol ${this.props.newContent}`}>{ this.state.symbol }</span>
                                     <img className = { this.state.currencyDrop.display === "block" ? "rotateUP" : "rotateDOWN" } src = { arrow } alt='arrow'/>
                                 </div>
-                                <div className = {`dropdown curr_dropdown ${this.state.currencyDrop.display}  ${this.state.currencyDrop.visibility}`} style = {{}}>
+                                <div className = {`dropdown curr_dropdown ${this.state.currencyDrop.display} ${this.props.newContent}  ${this.state.currencyDrop.visibility}`} style = {{}}>
                                     <ul>
                                         {
                                             currencyDropdown

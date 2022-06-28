@@ -39,6 +39,7 @@ export default class Cart extends Component {
             data : [],
             price : [],
             sumTotal : 0,
+            loading: true,
         }
     }
 
@@ -48,6 +49,7 @@ export default class Cart extends Component {
     }
 
     componentDidMount() {
+        console.log(this.state.loading)
         let array = [];
         this.props.cart.forEach((e) => {
             array.push(fetchQuery(ProductDetailsQuery, {product : e['id']}))
@@ -55,20 +57,28 @@ export default class Cart extends Component {
 
         Promise.all(array).then(data => {
             this.setState({data : data});
+            this.setState({loading: false})
         })
+
     }   
 
     render() {
-        
+        console.log(this.state.loading)
         console.log(this.props.calculateSum())
         const cart = this.state.data;
-        const tax = 21; //%
+        const tax = 21; // % //
         return (
             <>
-                <h3 key={this.state.prices}>cart{JSON.stringify(this.props.prices)}</h3>
+                <h3>cart{JSON.stringify(this.props.prices)}</h3>
                 <div className="cart_products">
-                    {
-                        cart.map((el,i) => {
+                    {    
+                        this.state.loading
+                        ? 
+                            <div className='loading_wrap'>
+                                <div className='loading'/>
+                            </div>
+                        : 
+                            cart.map((el,i) => {
                             let e = el['data']['product']; 
                             return (
                                 <div key={e['id']}>
@@ -105,14 +115,13 @@ export default class Cart extends Component {
                                         }
                                     </div>
                                 </div>
-                            )
-                         })
+                            )})
                     }
                 </div>
                 <div className="total">
-                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.calculateSum() * tax / 100}</span></div>
+                    <div><span>{`Tax ${tax}%:`}</span><span>{(this.props.calculateSum() * tax / 100).toFixed(2)}</span></div>
                     <div><span>quantity</span><span>{ this.props.cartItemNum }</span></div>
-                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.calculateSum()}</span></div>
+                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.calculateSum().toFixed(2)}</span></div>
                 </div>
             </>
         )

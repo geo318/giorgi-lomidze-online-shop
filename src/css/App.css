@@ -204,8 +204,8 @@ img {
 .new {animation: fade 300ms ease-in-out;}
 
 @keyframes fade {
- 0% {opacity: 0;}
- 100% {opacity: 1;}
+ 0% {opacity: 0; left: 0px;}
+ 100% {opacity: 1;left: -20px;}
 }
 
 .noStock {
@@ -258,4 +258,33 @@ img {
   background-color: var(--c-text);
   color: #fff;
   font-family: 'Roboto',sans-serif;
+}
+
+.loading_wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60px;
+  padding: 50px
+}
+.loading {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: transparent;
+    border: 5px solid #eee;
+    border-top-color: var(--c-primary);
+    -webkit-animation: 1s spin linear infinite;
+    animation: 1s spin linear infinite;
+}
+
+@keyframes spin {
+  from {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  to {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }

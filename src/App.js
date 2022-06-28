@@ -3,6 +3,7 @@ import './css/App.css';
 import Header from './Components/header';
 import Category from './Components/categories';
 import Cart from './Components/cart';
+import Product from './Components/product';
 import Error from './Components/error';
 import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
 import fetchQuery from './Components/fetchQuery';
@@ -37,6 +38,7 @@ class App extends React.Component {
     cartItemNum: 0,
     prices: [],
     sumTotal : 0,
+    productID : null
   }
 
   
@@ -143,7 +145,9 @@ class App extends React.Component {
         return '0'
     }
   }
-  
+  setProductId = (id) => {
+    this.setState({productID : id})
+  }
   render() {
     return (
       <>
@@ -152,9 +156,9 @@ class App extends React.Component {
           <div className='main'>
             <div className='wrapper'>
               <Routes>
-                <Route path="/" element={<Category calculateSum = {this.calculateSum} prices = {this.state.prices} itemPrice = {this.itemPrice} sumCartItems = {this.sumCartItems} addToCart = {this.addToCart} app = {this.state} switchCurrency = {this.switchCurrency} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
+                <Route path="/" element={<Category setProductId = {this.setProductId} calculateSum = {this.calculateSum} prices = {this.state.prices} itemPrice = {this.itemPrice} sumCartItems = {this.sumCartItems} addToCart = {this.addToCart} app = {this.state} switchCurrency = {this.switchCurrency} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
                 <Route path="/cart" element={<Cart calculateSum = {this.calculateSum} sumTotal = {this.state.sumTotal} prices = {this.state.prices} cart = {this.state.cart} cartItemNum = {this.state.cartItemNum} sumCartItems = {this.sumCartItems} adjustCartItemNumber = {this.adjustCartItemNumber} switchCurrency = {this.switchCurrency} activeCurrency = {this.state.currency}/>} />
-                <Route path="/products/:productId" element={<Product/>}/>
+                <Route path="/products/:productId" element={<Product id = {this.state.productID}/>}/>
                 <Route path="/*" element={<Error/>} />
               </Routes>
             </div>
