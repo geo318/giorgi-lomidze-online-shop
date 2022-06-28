@@ -71,6 +71,7 @@ export default class Cart extends Component {
                             </div>
                         : 
                             cart.map((el,i) => {
+                                console.log(el)
                             let e = el['data']['product']; 
                             return (
                                 this.props.cart?.[i]?.['num'] > 0 &&
@@ -88,10 +89,12 @@ export default class Cart extends Component {
                                                 e['attributes'].map((items,i) => (                                                       
                                                     <div key = {i}>
                                                         <span className="attr-name">{items['name']}:</span>
-                                                        <ul>
+                                                        <ul className="flx">
                                                             {
                                                                 items['items'].map(i => (
-                                                                    <li key = {i['id']} id= {i['id']}>{i['value']}</li>
+                                                                        items.id === 'Color'
+                                                                        ? <li className="color-batch" style={ {backgroundColor : i['value']} } key = {i['id']} id={i['id']}/>
+                                                                        : <li className="attr-txt" key = {i['id']} id={i['id']}>{i['value']}</li>
                                                                 ))
                                                             }
                                                         </ul>
@@ -115,9 +118,10 @@ export default class Cart extends Component {
                     }
                 </div>
                 <div className="total">
-                    <div><span>{`Tax ${tax}%:`}</span><span>{(this.props.calculateSum() * tax / 100).toFixed(2)}</span></div>
-                    <div><span>quantity</span><span>{ this.props.cartItemNum }</span></div>
-                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.calculateSum().toFixed(2)}</span></div>
+                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.symbol}{(this.props.calculateSum() * tax / 100).toFixed(2)}</span></div>
+                    <div><span>quantity:</span><span>{ this.props.cartItemNum }</span></div>
+                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.symbol}{this.props.calculateSum().toFixed(2)}</span></div>
+                    <button className="order">order</button>
                 </div>
             </>
         )

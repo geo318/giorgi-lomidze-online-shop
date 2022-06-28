@@ -41,7 +41,9 @@ h2 {
   grid-template-columns: 1fr 100px 1fr;
   height: 80px;
 }
-
+.main {
+  padding-bottom: 100px;
+}
 .header {
   z-index: 9;
   position: relative;
@@ -401,7 +403,8 @@ img {
   line-height: 38px;
 }
 
-.cart_products {
+.cart_products > div,
+.total {
   border-top: 1px solid #E5E5E5;
 }
 
@@ -412,6 +415,7 @@ div {
 
 .lft {
   justify-content: flex-start;
+  height: 288px;
 }
 
 .name {
@@ -444,4 +448,65 @@ div {
   font-weight: 700;
   text-transform: uppercase;
   font-family: 'Roboto Condensed', sans-serif;
+}
+
+.color-batch {
+  width: 32px;
+  height: 32px;
+  margin-right: 8px;
+}
+
+.attr ul {
+  margin-top: 7px;
+  margin-bottom: 16px;
+}
+
+.attr-txt {
+  width: 63px;
+  height: 45px;
+  margin-right: 8px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--c-text);
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+.total > 
+div > 
+span:first-child {
+  display: inline-block;
+  font-size: 24px;
+  line-height: 28px;
+  font-weight: 500;
+  width: 110px;
+  text-transform: capitalize;
+}
+.total > 
+div > 
+span:last-child {
+  display: inline-block;
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: 700;
+}
+.total > div {
+  padding-bottom: 8px;
+}
+
+.total {
+  padding-top: 32px;
+}
+
+.order {
+  width: 279px;
+  font-weight: 600px;
+  font-size: 14px;
+  color: #fff;
+  text-transform: uppercase;
+  background-color: var(--c-primary);
+  line-height: 17px;
+  padding: 13px 0;
+  border: 0;
+  margin-top: 16px;
 }
