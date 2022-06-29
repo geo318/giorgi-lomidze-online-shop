@@ -47,6 +47,7 @@ h2 {
 .header {
   z-index: 9;
   position: relative;
+  background-color: #fff;
 }
 .header .right {
   display: flex;
@@ -189,7 +190,7 @@ img {
 
 .cat {
   text-transform: uppercase;
-  line-height: 80px;
+  line-height: 78px;
   padding: 0 16px;
   border-bottom: 2px solid transparent;
 }
@@ -453,7 +454,6 @@ div {
 .color-batch {
   width: 32px;
   height: 32px;
-  margin-right: 8px;
 }
 
 .attr ul {
@@ -461,10 +461,13 @@ div {
   margin-bottom: 16px;
 }
 
+.attr ul > li {
+  margin-right: 8px;
+}
+
 .attr-txt {
   width: 63px;
   height: 45px;
-  margin-right: 8px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -509,4 +512,48 @@ span:last-child {
   padding: 13px 0;
   border: 0;
   margin-top: 16px;
+}
+
+.attr 
+ul > 
+li:hover {
+  cursor: pointer;
+  user-select: none;
+}
+.active-param >
+.attr-txt {
+  background-color: var(--c-text);
+  color:#fff;
+}
+
+.active-param >
+.color-batch {
+  outline:1px solid #5ECE7B;
+  outline-offset: 2px;
+}
+
+[data-value='White'] > div {
+  box-shadow: inset 0 0 0 1px var(--c-text)
+}
+
+.cart-dropdown {
+  position: absolute;
+  z-index: 3;
+  top:50px;
+  width: 325px;
+  max-height: 677px;
+  right: -30px;
+  overflow: hidden;
+  background-color:#fff;
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  top:0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(57, 55, 72, 0.22);;
+  z-index: 2;
 }

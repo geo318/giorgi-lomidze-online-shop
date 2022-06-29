@@ -4,7 +4,7 @@ import logo from '../icons/logo.svg'
 import CartSVG from '../icons/cartSVG'
 import arrow from '../icons/arrow.svg'
 import {BrowserRouter as Router, Link} from 'react-router-dom'
-
+import Cart from './cart';
 const categoriesQuery = `
     query {
         categories {
@@ -33,10 +33,14 @@ class Header extends React.Component {
             currencies: [],
             symbol: "$",
             currencyDrop: {display: "none",visibility: "hidden"},
+            cartDrop: false,
         }
         this.dropper = this.dropper.bind(this);
         this.dropperHide = this.dropperHide.bind(this);
         this.animate = this.animate.bind(this);
+        this.dropBag = this.dropBag.bind(this);
+        this.closeCartDropdown = this.closeCartDropdown.bind(this);
+        this.close = this.close.bind(this);
     }
     
     componentDidMount() {
@@ -81,8 +85,23 @@ class Header extends React.Component {
         }
     }
 
-    dropBag() {
+    dropBag(e) {
+        if (this.state.cartDrop) {
+          this.closeCartDropdown();
+          return
+        }
+        this.setState({ cartDrop: true });
+        e.stopPropagation();
+        document.addEventListener("click", this.closeCartDropdown);
+    }
 
+    closeCartDropdown() {
+        this.setState({ cartDrop: false });
+        document.removeEventListener("click", this.closeCartDropdown);
+    }
+
+    close() {
+        this.setState({ cartDrop: false });
     }
 
     render() {
@@ -110,6 +129,9 @@ class Header extends React.Component {
         return (
             <> 
                 <div className='header'>
+                    {/* {
+                        <Cart appProps = {this.props.appProps}/>
+                    } */}
                     <div className='wrapper'>
                         <div className='left'>
                             <div className='flx'>
@@ -124,14 +146,18 @@ class Header extends React.Component {
                             </div>
                         </div>
                         <div className='right'>
-                            <Link to = '/cart' className='cart flx'
-                                onClick = { ()=> this.dropBag }
-                            >
+                            <div className='cart flx' onClick = {(e)=> this.dropBag(e) }>
                                 { this.props.cartItemNum > 0 && <span className = 'num'>{ this.props.cartItemNum }</span> }
                                 { 
                                     <CartSVG fill="#43464E"/> 
                                 }
-                            </Link>
+                                <div onClick={e => e.stopPropagation()}className='cart-dropdown' style = {this.state.cartDrop ? {display : 'block'}:{display : 'none'}}>
+                                    { 
+                                        this.state.cartDrop && <Cart close = {this.close}check = {this.state.symbol} appProps = {this.props.appProps}/> 
+                                    }
+                                </div>
+                            </div>
+
                             <div className="currency_switch main_drop" 
                                 onMouseEnter={ ()=>this.dropper(this.state.currencyDrop) }
                                 onMouseLeave={ ()=>this.dropperHide(this.state.currencyDrop) }
@@ -151,6 +177,8 @@ class Header extends React.Component {
                         </div>
                     </div>
                 </div>
+                
+                { this.state.cartDrop && <div className='overlay'/>}
             </>
         )
     }

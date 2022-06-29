@@ -1,6 +1,7 @@
 import React, {Component} from "react";
 import fetchQuery from './fetchQuery';
 import Carousel from "./carousel";
+import {BrowserRouter as Router, Link} from 'react-router-dom';
 
 const ProductDetailsQuery = `
     query getProduct($product : String!){
@@ -45,7 +46,7 @@ export default class Cart extends Component {
 
     componentDidMount() {
         let array = [];
-        this.props.cart.forEach((e) => {
+        this.props.appProps.state.cart.forEach((e) => {
             array.push(fetchQuery(ProductDetailsQuery, {product : e['id']}))
         })
 
@@ -58,12 +59,12 @@ export default class Cart extends Component {
 
     render() {
         const cart = this.state.data;
+        const cartParams = this.props.appProps.state.cartItemParams;
         const tax = 21; // % //
         return (
             <>
-                <h3 className="cart_header">cart</h3>
+                {this.props.check == null && <h3 className="cart_header">cart</h3>}
                 <div className="cart_products">
-                    <div>{JSON.stringify(cart)}</div>
                     {    
                         this.state.loading
                         ? 
@@ -74,14 +75,14 @@ export default class Cart extends Component {
                             cart.map((el,i) => {
                             let e = el['data']['product']; 
                             return (
-                                this.props.cart?.[i]?.['num'] > 0 &&
+                                this.props.appProps.state.cart?.[i]?.['num'] > 0 &&
                                 <div key={e['id']} className='flx'>
                                     <div className="lft flx-c grow">
                                         <div className="name">{e['brand']}</div>
                                         <div className="sub">{e['name']}</div>
                                         <div className="price">
-                                            <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['currency']['symbol']}</span>
-                                            <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']}</span>
+                                            <span>{e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['currency']['symbol']}</span>
+                                            <span>{e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['amount']}</span>
                                         </div>
                                         {/* <div dangerouslySetInnerHTML={{__html: e['description']}}></div> */}
                                         <div className="attr">
@@ -89,13 +90,17 @@ export default class Cart extends Component {
                                                 e['attributes'].map((items,i) => (                                                       
                                                     <div key = {i}>
                                                         <span className="attr-name">{items['name']}:</span>
-                                                        {console.log(e['id'])}
                                                         <ul className="flx">
                                                             {
                                                                 items['items'].map(i => (
-                                                                        items.id === 'Color'
-                                                                        ? <li onClick = {() => this.props.setItemParameters(e['id'], items['name'], i['value'])} className="color-batch" style={ {backgroundColor : i['value']} } key = {i['id']} id={i['id']}/>
-                                                                        : <li onClick = {() => this.props.setItemParameters(e['id'], items['name'], i['value'])} className="attr-txt" key = {i['id']} id={i['id']}>{i['value']}</li>
+                                                                    <li className={  i['value'] === cartParams?.[cartParams.findIndex((el)=> el.id === e.id)]?.attr[cartParams?.[cartParams.findIndex((el)=> el.id === e.id)]?.attr.findIndex((el)=>el.name === items['name'])]?.param ? 'active-param' : null  } 
+                                                                        onClick = {() => this.props.appProps.setItemParameters(e['id'], items['name'], i['value'])} key = {i['id']} data-value={i['id']}>
+                                                                        {
+                                                                            items.id === 'Color'
+                                                                            ? <div className="color-batch" style={ {backgroundColor : i['value']} }/>
+                                                                            : <div className="attr-txt">{i['value']}</div>
+                                                                        }
+                                                                    </li>
                                                                 ))
                                                             }
                                                         </ul>
@@ -106,12 +111,12 @@ export default class Cart extends Component {
                                     </div>
                                     <div className="rgt flx">
                                         <div className="cart-ctr flx flx-c">
-                                            <div className="plus flx flx-hc" onClick = {()=> {this.props.adjustCartItemNumber(e['id'],+1); }}/>
-                                            <div className="cart-num grow flx">{this.props.cart?.[i]?.['num']}</div>
-                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.adjustCartItemNumber(e['id'],-1);}}/>
+                                            <div className="plus flx flx-hc" onClick = {()=> {this.props.appProps.adjustCartItemNumber(e['id'],+1); }}/>
+                                            <div className="cart-num grow flx">{this.props.appProps.state.cart?.[i]?.['num']}</div>
+                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.adjustCartItemNumber(e['id'],-1);}}/>
                                         </div>
                                         <div className="carousel">
-                                            <Carousel array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
+                                            <Carousel check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
                                         </div>
                                     </div>
                                 </div>
@@ -119,10 +124,17 @@ export default class Cart extends Component {
                     }
                 </div>
                 <div className="total">
-                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.symbol}{(this.props.calculateSum() * tax / 100).toFixed(2)}</span></div>
-                    <div><span>quantity:</span><span>{ this.props.cartItemNum }</span></div>
-                    <div><span>{`Tax ${tax}%:`}</span><span>{this.props.symbol}{this.props.calculateSum().toFixed(2)}</span></div>
-                    <button className="order">order</button>
+                    { this.props.check == null && <div><span>{`Tax ${tax}%:`}</span><span>{this.props.appProps.state.symbol}{(this.props.appProps.calculateSum() * tax / 100).toFixed(2)}</span></div> }
+                    { this.props.check == null && <div><span>quantity:</span><span>{ this.props.appProps.state.cartItemNum }</span></div> }
+                    <div><span>total</span><span>{this.props.appProps.state.symbol}{this.props.appProps.calculateSum().toFixed(2)}</span></div>
+                    { this.props.check == null && <button className="order">order</button> }
+                    {
+                        this.props.check && 
+                        
+                            <Link to = "/cart">
+                                <button className="order" onClick = {()=>this.props.close()}>cart</button>
+                            </Link>
+                    }
                 </div>
             </>
         )
