@@ -33,14 +33,41 @@ class App extends React.Component {
       newContent: 'old',
       cart: [],
       cartItemNum: 0,
+      cartItemParams: [],
       prices: [],
       sumTotal : 0,
       productID : null,
-      symbol: '$'
+      symbol: '$',
     }
-    this.symbolHandle = this.symbolHandle.bind(this)
+    this.symbolHandle = this.symbolHandle.bind(this);
+    this.setItemParameters = this.setItemParameters.bind(this);
   }
   
+  setItemParameters(id, name, param) {
+    let array = this.state.cartItemParams;
+    let indx = array.findIndex((e) => id === e['id']);
+    if(indx < 0) {
+      this.setState(
+        { cartItemParams : [...array, {id: id, attr : [ {name : name, param : param} ]}] }
+      )
+      return
+    } 
+    
+    let attrArr = array[indx]['attr'];
+    let attrIndx = array[indx]['attr'].findIndex((e) => name === e['name']);
+    if(attrIndx < 0) {
+      this.setState(
+        { cartItemParams : [...array.slice(0,indx), {id: id, attr : [ ...attrArr,{name : name, param : param},...array.slice(indx + 1) ]}] }
+      )
+      return
+    }
+
+    this.setState(
+      { cartItemParams : [...array.slice(0,indx), {id: id, attr : [ ...attrArr.slice(0,attrIndx),{name : name, param : param},...attrArr.slice(attrIndx + 1) ]}] }
+    )
+    
+  }
+
   calculateSum = () => {
     let sum = this.state.prices.reduce((total,current,i) => total += current.price * this.state.cart[i]['num'], 0)
     return sum
@@ -154,12 +181,13 @@ class App extends React.Component {
     return (
       <>
         <Router>
+          {console.log(this.state.cartItemParams)}
         <Header symbolHandle = {this.symbolHandle} symbol = {this.state.symbol} calculateSum = {this.calculateSum} cartItemNum = {this.state.cartItemNum} categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} detectNewContent = {this.detectNewContent} newContent = {this.state.newContent}/>      
           <div className='main'>
             <div className='wrapper'>
               <Routes>
                 <Route path="/" element={<Category setProductId = {this.setProductId} calculateSum = {this.calculateSum} prices = {this.state.prices} itemPrice = {this.itemPrice} sumCartItems = {this.sumCartItems} addToCart = {this.addToCart} app = {this.state} switchCurrency = {this.switchCurrency} activeCategory = {this.state.category} activeCurrency = {this.state.currency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
-                <Route path="/cart" element={<Cart symbol = {this.state.symbol} calculateSum = {this.calculateSum} sumTotal = {this.state.sumTotal} prices = {this.state.prices} cart = {this.state.cart} cartItemNum = {this.state.cartItemNum} sumCartItems = {this.sumCartItems} adjustCartItemNumber = {this.adjustCartItemNumber} switchCurrency = {this.switchCurrency} activeCurrency = {this.state.currency}/>} />
+                <Route path="/cart" element={<Cart setItemParameters = {this.setItemParameters} symbol = {this.state.symbol} calculateSum = {this.calculateSum} sumTotal = {this.state.sumTotal} prices = {this.state.prices} cart = {this.state.cart} cartItemNum = {this.state.cartItemNum} sumCartItems = {this.sumCartItems} adjustCartItemNumber = {this.adjustCartItemNumber} switchCurrency = {this.switchCurrency} activeCurrency = {this.state.currency}/>} />
                 <Route path="/products/:productId" element={<Product id = {this.state.productID}/>}/>
                 <Route path="/*" element={<Error/>} />
               </Routes>

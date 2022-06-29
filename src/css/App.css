@@ -415,7 +415,7 @@ div {
 
 .lft {
   justify-content: flex-start;
-  height: 288px;
+  min-height: 288px;
 }
 
 .name {

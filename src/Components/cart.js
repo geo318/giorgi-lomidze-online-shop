@@ -63,6 +63,7 @@ export default class Cart extends Component {
             <>
                 <h3 className="cart_header">cart</h3>
                 <div className="cart_products">
+                    <div>{JSON.stringify(cart)}</div>
                     {    
                         this.state.loading
                         ? 
@@ -71,7 +72,6 @@ export default class Cart extends Component {
                             </div>
                         : 
                             cart.map((el,i) => {
-                                console.log(el)
                             let e = el['data']['product']; 
                             return (
                                 this.props.cart?.[i]?.['num'] > 0 &&
@@ -89,12 +89,13 @@ export default class Cart extends Component {
                                                 e['attributes'].map((items,i) => (                                                       
                                                     <div key = {i}>
                                                         <span className="attr-name">{items['name']}:</span>
+                                                        {console.log(e['id'])}
                                                         <ul className="flx">
                                                             {
                                                                 items['items'].map(i => (
                                                                         items.id === 'Color'
-                                                                        ? <li className="color-batch" style={ {backgroundColor : i['value']} } key = {i['id']} id={i['id']}/>
-                                                                        : <li className="attr-txt" key = {i['id']} id={i['id']}>{i['value']}</li>
+                                                                        ? <li onClick = {() => this.props.setItemParameters(e['id'], items['name'], i['value'])} className="color-batch" style={ {backgroundColor : i['value']} } key = {i['id']} id={i['id']}/>
+                                                                        : <li onClick = {() => this.props.setItemParameters(e['id'], items['name'], i['value'])} className="attr-txt" key = {i['id']} id={i['id']}>{i['value']}</li>
                                                                 ))
                                                             }
                                                         </ul>
