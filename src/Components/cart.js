@@ -40,11 +40,17 @@ export default class Cart extends Component {
             data : [],
             price : [],
             sumTotal : 0,
-            loading: true,
+            loading : true,
+            render : false
         }
+        this.fetchCartItems = this.fetchCartItems.bind(this);
     }
 
     componentDidMount() {
+        this.fetchCartItems()
+    }
+
+    fetchCartItems() {
         let array = [];
         this.props.appProps.state.cart.forEach((e) => {
             array.push(fetchQuery(ProductDetailsQuery, {product : e['id']}))
@@ -53,9 +59,15 @@ export default class Cart extends Component {
         Promise.all(array).then(data => {
             this.setState({data : data});
             this.setState({loading: false})
+            this.setState({cartNum : this.state.data.length })
         })
+        this.setState({render : false})
+    }
 
-    }   
+    componentDidUpdate(prevProps,prevState,snapshot) {
+        if(this.state.render !== prevState.render)
+            return this.fetchCartItems()
+    }
 
     render() {
         const cart = this.state.data;
@@ -76,9 +88,9 @@ export default class Cart extends Component {
                         : 
                             cart.map((el,i) => {
                             let e = el['data']['product']; 
-                            return (
-                                this.props.appProps.state.cart?.[i]?.['num'] > 0 &&
+                            return (                                
                                 <div key={e['id']} className='flx'>
+                                    {console.log(i,this.props.appProps.state.cart[i]?.num)}
                                     <div className="lft flx-c grow">
                                         <div className="name">{e['brand']}</div>
                                         <div className="sub">{e['name']}</div>
@@ -86,7 +98,7 @@ export default class Cart extends Component {
                                             <span>{e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['currency']['symbol']}</span>
                                             <span>{e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['amount']}</span>
                                         </div>
-                                        {/* <div dangerouslySetInnerHTML={{__html: e['description']}}></div> */}
+                                        {/* <div dangerouslySetInnerHTML={{__html: e['description']}}/> */}
                                         <div className="attr">
                                             {
                                                 e['attributes'].map((items,i) => (                                                       
@@ -115,7 +127,7 @@ export default class Cart extends Component {
                                         <div className="cart-ctr flx flx-c">
                                             <div className="plus flx flx-hc" onClick = {()=> {this.props.appProps.adjustCartItemNumber(e['id'],+1); }}/>
                                             <div className="cart-num grow flx">{this.props.appProps.state.cart?.[i]?.['num']}</div>
-                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.adjustCartItemNumber(e['id'],-1);}}/>
+                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.adjustCartItemNumber(e['id'],-1); this.props.appProps.state.cart?.[i]?.['num'] > 0 && this.setState({render : true})}}/>
                                         </div>
                                         <div className="carousel">
                                             <Carousel check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>

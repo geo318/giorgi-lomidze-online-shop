@@ -42,15 +42,6 @@ class App extends React.Component {
     this.symbolHandle = this.symbolHandle.bind(this);
     this.setItemParameters = this.setItemParameters.bind(this);
   }
-
-  // setActiveParam(id,name,value) {
-  //   let array = this.state.cartItemParams;
-  //   let indx = array.findIndex((e) => id === e['id']);
-  //   if(indx > 0) {
-  //     array[indx]['attr'].some(e => e.name === name)
-  //     return
-  //   } 
-  // }
   
   setItemParameters(id, name, param) {
     let array = this.state.cartItemParams;
@@ -102,8 +93,9 @@ class App extends React.Component {
         })
         this.setState({prices : priceArr})
         this.calculateSum()
-    })
-  }}
+      })
+    }
+  }
 
   itemPrice = (id, amount) => {
     let pricesArray = this.state.prices;
@@ -190,7 +182,6 @@ class App extends React.Component {
     return (
       <>
         <Router>
-          {console.log(this.state.cartItemParams)}
         <Header appProps = {this} symbolHandle = {this.symbolHandle} symbol = {this.state.symbol} calculateSum = {this.calculateSum} cartItemNum = {this.state.cartItemNum} categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} detectNewContent = {this.detectNewContent} newContent = {this.state.newContent}/>      
           <div className='main'>
             <div className='wrapper'>
