@@ -44,6 +44,8 @@ class Header extends React.Component {
     }
     
     componentDidMount() {
+        document.querySelector('body').addEventListener('click',()=> {this.dropperHide();})
+
         fetchQuery(categoriesQuery).then(data => {
             this.setState( {categories : data['data']['categories']} )
         })
@@ -54,7 +56,11 @@ class Header extends React.Component {
     }
 
 
-    dropper(elem) {
+    dropper(e) {
+        if(this.state.currencyDrop.display === "block") {
+            return this.dropperHide(e)
+        }
+        e.stopPropagation();
         this.setState({currencyDrop: {display: "block",visibility: "hidden"}})
         let timeout = setTimeout(()=>{
             this.setState({currencyDrop: {display: "block",visibility: "visible"}})
@@ -63,7 +69,10 @@ class Header extends React.Component {
         clearTimeout(timeout);
     }
 
-    dropperHide(elem) {
+
+    dropperHide(e) {
+        if(this.state.currencyDrop.display === "none") return
+
         this.setState({currencyDrop: {display: "block",visibility: "hidden"}})
         let timeout = setTimeout(()=>{
             this.setState({currencyDrop: {display: "none",visibility: "hidden"}})
@@ -129,9 +138,6 @@ class Header extends React.Component {
         return (
             <> 
                 <div className='header'>
-                    {/* {
-                        <Cart appProps = {this.props.appProps}/>
-                    } */}
                     <div className='wrapper'>
                         <div className='left'>
                             <div className='flx'>
@@ -142,36 +148,37 @@ class Header extends React.Component {
                         </div>
                         <div className='middle'>
                             <div className='logo flx'>
-                                <img src={logo} alt='logo'/>
+                                <Link to = '/'>
+                                    <img src={logo} alt='logo'/>
+                                </Link>
                             </div>
                         </div>
-                        <div className='right'>
-                            <div className='cart flx' onClick = {(e)=> this.dropBag(e) }>
-                                { this.props.cartItemNum > 0 && <span className = 'num'>{ this.props.cartItemNum }</span> }
-                                { 
-                                    <CartSVG fill="#43464E"/> 
-                                }
-                                <div onClick={e => e.stopPropagation()}className='cart-dropdown' style = {this.state.cartDrop ? {display : 'block'}:{display : 'none'}}>
+                        <div className='right flx'>
+                            <div className='flx flx-rr'>
+                                <div className='cart flx' onClick = {(e)=> this.dropBag(e) }>
+                                    { this.props.cartItemNum > 0 && <span className = 'num'>{ this.props.cartItemNum }</span> }
                                     { 
-                                        this.state.cartDrop && <Cart close = {this.close}check = {this.state.symbol} appProps = {this.props.appProps}/> 
+                                        <CartSVG fill="#43464E"/> 
                                     }
-                                </div>
-                            </div>
-
-                            <div className="currency_switch main_drop" 
-                                onMouseEnter={ ()=>this.dropper(this.state.currencyDrop) }
-                                onMouseLeave={ ()=>this.dropperHide(this.state.currencyDrop) }
-                            >
-                                <div className='drop_curr'>
-                                    <span className = {`curr_symbol ${this.props.newContent}`}>{ this.props.symbol }</span>
-                                    <img className = { this.state.currencyDrop.display === "block" ? "rotateUP" : "rotateDOWN" } src = { arrow } alt='arrow'/>
-                                </div>
-                                <div className = {`dropdown curr_dropdown ${this.state.currencyDrop.display} ${this.props.newContent}  ${this.state.currencyDrop.visibility}`} style = {{}}>
-                                    <ul>
-                                        {
-                                            currencyDropdown
+                                    <div onClick={e => e.stopPropagation()} className='cart-dropdown' style = {this.state.cartDrop ? {display : 'block'}:{display : 'none'}}>
+                                        { 
+                                            this.state.cartDrop && <Cart close = {this.close}check = {this.state.symbol} appProps = {this.props.appProps}/> 
                                         }
-                                    </ul>
+                                    </div>
+                                </div>
+
+                                <div className="currency_switch main_drop" onClick={ (e)=>this.dropper(e) }>
+                                    <div className='drop_curr'>
+                                        <span className = {`curr_symbol ${this.props.newContent}`}>{ this.props.symbol }</span>
+                                        <img className = { this.state.currencyDrop.display === "block" ? "rotateUP" : "rotateDOWN" } src = { arrow } alt='arrow'/>
+                                    </div>
+                                    <div className = {`dropdown curr_dropdown ${this.state.currencyDrop.display} ${this.props.newContent}  ${this.state.currencyDrop.visibility}`}>
+                                        <ul>
+                                            {
+                                                currencyDropdown
+                                            }
+                                        </ul>
+                                    </div>
                                 </div>
                             </div>
                         </div>

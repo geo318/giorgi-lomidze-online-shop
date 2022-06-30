@@ -60,10 +60,12 @@ export default class Cart extends Component {
     render() {
         const cart = this.state.data;
         const cartParams = this.props.appProps.state.cartItemParams;
+        const cartItemNum = this.props.appProps.state.cartItemNum;
         const tax = 21; // % //
         return (
             <>
                 {this.props.check == null && <h3 className="cart_header">cart</h3>}
+                {this.props.check && <div className="cart-drop-header"><span>My Bag,</span><span>{` ${cartItemNum} item${cartItemNum > 1 ? 's' : ""}`}</span></div>}
                 <div className="cart_products">
                     {    
                         this.state.loading
