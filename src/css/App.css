@@ -505,7 +505,7 @@ span:last-child {
 
 .order {
   width: 279px;
-  font-weight: 600px;
+  font-weight: 600;
   font-size: 14px;
   color: #fff;
   text-transform: uppercase;
@@ -698,4 +698,52 @@ div {
 }
 .currency_switch {
   padding-right: 12px;
+}
+
+.cart-dropdown 
+.total {
+  border: 0;
+  padding-top: 0;
+}
+.cart-dropdown
+.total > div:first-child {
+  padding-bottom: 32px;
+}
+
+.cart-dropdown 
+.total > div > span {
+  font-size: 16px;
+  line-height: 25px;
+}
+
+.cart-dropdown 
+.total > div > span:last-child {
+  float: right;
+}
+
+.cart-dropdown-footer {
+  gap: 12px;
+}
+.cart-dropdown
+.order {
+  width: 100%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid var(--c-primary);
+  margin: 0;
+}
+
+.footer-but {
+  flex-basis: 50%;
+}
+
+.order.view-bag {
+  background-color: #fff;
+  border-color: var(--c-text);
+  color: var(--c-text)
+}
+
+.order:hover {
+  cursor: pointer;
 }

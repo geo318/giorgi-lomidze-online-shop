@@ -144,10 +144,12 @@ export default class Cart extends Component {
                     { this.props.check == null && <button className="order">order</button> }
                     {
                         this.props.check && 
-                        
-                            <Link to = "/cart">
-                                <button className="order" onClick = {()=>this.props.close()}>cart</button>
-                            </Link>
+                            <div className="cart-dropdown-footer flx">
+                                <Link className = "footer-but" to = "/cart">
+                                    <button className="order view-bag" onClick = { ()=>this.props.close() }>view bag</button>
+                                </Link>
+                                <button className="footer-but order checkout" onClick = { ()=>this.props.close() }>check out</button>
+                            </div>
                     }
                 </div>
             </>
