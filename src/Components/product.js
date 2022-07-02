@@ -42,6 +42,15 @@ export default class Product extends React.Component {
     componentDidMount() {
         fetchQuery(ProductDetailsQuery, {product : this.props.appProps.state.productID}).then(data => this.setState({product : data}))
     }
+
+    addToCart() {
+        let cartParams = this.props.appProps.state.cartItemParams;
+        let index = cartParams.findIndex(e => e.id === this.props.appProps.state.productID);
+
+        if(index < 0 || cartParams[index]['attr'].length !== this.state.product['data']['product']['attributes'].length ) return
+        
+        this.props.appProps.addToCart(this.props.appProps.state.productID);
+    }
     
 
     render() {
