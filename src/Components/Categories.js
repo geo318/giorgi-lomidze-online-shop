@@ -40,16 +40,11 @@ class Category extends React.Component {
     }
 
     componentDidMount() {
-        let localState = JSON.parse(localStorage.getItem('cat-state'));
-        if(localState) this.setState(localState)
-
         this.productsFetch(this.props.activeCategory)
         this.onScroll()
     }
 
     componentDidUpdate(prevProps, prevState) {
-        localStorage.setItem('cat-state', JSON.stringify(this.state))
-
         if(prevProps.activeCategory !== this.props.activeCategory) {
             this.setState({data : []})
             this.productsFetch(this.props.activeCategory)

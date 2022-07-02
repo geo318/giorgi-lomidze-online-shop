@@ -95,7 +95,6 @@ export default class Cart extends Component {
                                             <span>{e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['currency']['symbol']}</span>
                                             <span>{e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['amount']}</span>
                                         </div>
-                                        {/* <div dangerouslySetInnerHTML={{__html: e['description']}}/> */}
                                         <div className="attr">
                                             {
                                                 e['attributes'].map((items,i) => (                                                       

@@ -91,7 +91,7 @@ class Header extends React.Component {
         let timeout = setTimeout(()=>{
             this.setState({currencyDrop: {display: "none", visibility: "hidden"}})
         }, 100);
-        
+
         if(this.state.currencyDrop.display === "none")
         clearTimeout(timeout);
     }
@@ -162,9 +162,7 @@ class Header extends React.Component {
                         </div>
                         <div className='middle'>
                             <div className='logo flx'>
-                                <Link to = '/'>
-                                    <img src={logo} alt='logo'/>
-                                </Link>
+                                <img src={logo} alt='logo'/>
                             </div>
                         </div>
                         <div className='right flx'>
