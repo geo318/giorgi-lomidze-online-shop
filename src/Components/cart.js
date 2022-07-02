@@ -38,8 +38,6 @@ export default class Cart extends Component {
         super(props)
         this.state = {
             data : [],
-            price : [],
-            sumTotal : 0,
             loading : true,
             render : false
         }
@@ -48,6 +46,11 @@ export default class Cart extends Component {
 
     componentDidMount() {
         this.fetchCartItems()
+    }
+
+    componentDidUpdate(prevProps,prevState,snapshot) {
+        if(this.state.render !== prevState.render)
+            return this.fetchCartItems()
     }
 
     fetchCartItems() {
@@ -62,11 +65,6 @@ export default class Cart extends Component {
             this.setState({cartNum : this.state.data.length })
         })
         this.setState({render : false})
-    }
-
-    componentDidUpdate(prevProps,prevState,snapshot) {
-        if(this.state.render !== prevState.render)
-            return this.fetchCartItems()
     }
 
     render() {

@@ -42,7 +42,35 @@ class App extends React.Component {
     this.symbolHandle = this.symbolHandle.bind(this);
     this.setItemParameters = this.setItemParameters.bind(this);
   }
-  
+
+  componentDidMount() {
+    this.sumCartItems(this.state.cart)
+    this.calculateSum()
+
+    let localState = JSON.parse(localStorage.getItem('app-state'));
+    if(localState) this.setState(localState)
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    localStorage.setItem('app-state', JSON.stringify(this.state))
+    if(prevState.activeCurrency !== this.state.activeCurrency) {
+      let array = [];
+      this.state.cart.forEach((e)=> 
+        array.push(fetchQuery(ProductsPriceQuery, {product : e.id}))
+      )
+        
+      Promise.all(array).then(data => {
+        this.setState({prices:[]})
+        let priceArr = [];
+        data.forEach((el)=> {
+          let e = el.data.product
+          priceArr.push({id : e.id, price: e['prices'][this.switchCurrency(this.state.activeCurrency)]['amount']})
+        })
+        this.setState({prices : priceArr})
+        this.calculateSum()
+      })
+    }
+  }
   setItemParameters(id, name, param) {
     let array = this.state.cartItemParams;
     let indx = array.findIndex((e) => id === e['id']);
@@ -65,7 +93,6 @@ class App extends React.Component {
     this.setState(
       { cartItemParams : [...array.slice(0,indx), {id: id, attr : [ ...attrArr.slice(0,attrIndx),{name : name, param : param},...attrArr.slice(attrIndx + 1) ]}] }
     )
-    
   }
 
   calculateSum = () => {
@@ -77,25 +104,7 @@ class App extends React.Component {
     this.setState({symbol : val})
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if(prevState.activeCurrency !== this.state.activeCurrency) {
-      let array = [];
-      this.state.cart.forEach((e)=> 
-        array.push(fetchQuery(ProductsPriceQuery, {product : e.id}))
-      )
-        
-      Promise.all(array).then(data => {
-        this.setState({prices:[]})
-        let priceArr = [];
-        data.forEach((el)=> {
-          let e = el.data.product
-          priceArr.push({id : e.id, price: e['prices'][this.switchCurrency(this.state.activeCurrency)]['amount']})
-        })
-        this.setState({prices : priceArr})
-        this.calculateSum()
-      })
-    }
-  }
+
 
   itemPrice = (id, amount) => {
     let pricesArray = this.state.prices;
@@ -118,10 +127,7 @@ class App extends React.Component {
     this.setState( { cartItemNum : num } )
   }
 
-  componentDidMount() {
-    this.sumCartItems(this.state.cart)
-    this.calculateSum()
-  }
+
 
   adjustCartItemNumber = (productId, operation)=> {
     let cartArray = this.state.cart;

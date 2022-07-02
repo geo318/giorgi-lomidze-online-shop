@@ -35,12 +35,23 @@ export default class Product extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            productID : '',
             product : [],
             currentImg : 0
         }
     }
     componentDidMount() {
-        fetchQuery(ProductDetailsQuery, {product : this.props.appProps.state.productID}).then(data => this.setState({product : data}))
+        let localState = JSON.parse(localStorage.getItem('prod-state'));
+        if(localState) this.setState(localState);
+
+        let productID;
+        this.props.appProps.state.productID ? productID = this.props.appProps.state.productID : productID = JSON.parse(localStorage.getItem('app-state'))['productID'];
+
+        fetchQuery(ProductDetailsQuery, {product : productID}).then(data => this.setState({product : data}))
+    }
+
+    componentDidUpdate() {
+        localStorage.setItem('prod-state', JSON.stringify(this.state))
     }
 
     addToCart() {
@@ -48,7 +59,7 @@ export default class Product extends React.Component {
         let index = cartParams.findIndex(e => e.id === this.props.appProps.state.productID);
 
         if(index < 0 || cartParams[index]['attr'].length !== this.state.product['data']['product']['attributes'].length ) return
-        
+
         this.props.appProps.addToCart(this.props.appProps.state.productID);
     }
     

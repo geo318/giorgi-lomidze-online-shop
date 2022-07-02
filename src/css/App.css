@@ -806,7 +806,7 @@ div {
   font-size: 16px;
 }
 
-.pr-footer-desc {
+.pr-footer-desc * {
   font-size: 16px;
   line-height: 26px;
   font-weight: 400;

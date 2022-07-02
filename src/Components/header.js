@@ -45,6 +45,10 @@ class Header extends React.Component {
     }
     
     componentDidMount() {
+        
+        let localState = JSON.parse(localStorage.getItem('header-state'));
+        if(localState) this.setState(localState)
+        this.setState({cartDrop : false,currencyDrop : {display: "none",visibility: "hidden"}})
         document.querySelector('body').addEventListener('click', ()=> {this.dropperHide();})
 
         fetchQuery(categoriesQuery).then(data => {
@@ -56,6 +60,14 @@ class Header extends React.Component {
         })
     }
 
+    componentDidUpdate(prevProps, prevState) {
+        
+        localStorage.setItem('header-state', JSON.stringify(this.state))
+        
+        if(prevProps.symbol !== this.props.symbol){
+            this.animate()
+        }
+    }
 
     dropper(e) {
         this.closeCartDropdown()
@@ -79,6 +91,7 @@ class Header extends React.Component {
         let timeout = setTimeout(()=>{
             this.setState({currencyDrop: {display: "none", visibility: "hidden"}})
         }, 100);
+        
         if(this.state.currencyDrop.display === "none")
         clearTimeout(timeout);
     }
@@ -90,11 +103,7 @@ class Header extends React.Component {
         }, 300)
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        if(prevProps.symbol !== this.props.symbol){
-            this.animate()
-        }
-    }
+
 
     dropBag(e) {
         this.dropperHide()
