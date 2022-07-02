@@ -747,3 +747,37 @@ div {
 .order:hover {
   cursor: pointer;
 }
+
+.image-set {
+  align-items: flex-start;
+}
+
+.image-set img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.thumb {
+  width: 80px;
+  margin-top: 35px;
+}
+
+.thumb:hover {
+  cursor: pointer;
+}
+
+.active-image {
+  width: 605px;
+  height: 513px;
+}
+
+.pr-desc {
+  width: 292px;
+  margin-left: 105px;
+}
+
+.pr-wrap {
+  align-items: flex-start;
+  margin-top: 80px;
+}

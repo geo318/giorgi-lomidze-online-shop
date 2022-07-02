@@ -57,6 +57,7 @@ class Header extends React.Component {
 
 
     dropper(e) {
+        this.closeCartDropdown()
         if(this.state.currencyDrop.display === "block") {
             return this.dropperHide(e)
         }
@@ -95,6 +96,8 @@ class Header extends React.Component {
     }
 
     dropBag(e) {
+        this.dropperHide()
+
         if (this.state.cartDrop) {
           this.closeCartDropdown();
           return
@@ -105,6 +108,7 @@ class Header extends React.Component {
     }
 
     closeCartDropdown() {
+        if(!this.state.cartDrop) return
         this.setState({ cartDrop: false });
         document.removeEventListener("click", this.closeCartDropdown);
     }
@@ -162,7 +166,7 @@ class Header extends React.Component {
                                     }
                                     <div onClick={e => e.stopPropagation()} className='cart-dropdown' style = {this.state.cartDrop ? {display : 'block'}:{display : 'none'}}>
                                         { 
-                                            this.state.cartDrop && <Cart close = {this.close}check = {this.state.symbol} appProps = {this.props.appProps}/> 
+                                            this.state.cartDrop && <Cart close = {this.close} check = {this.state.symbol} appProps = {this.props.appProps}/> 
                                         }
                                     </div>
                                 </div>

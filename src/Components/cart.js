@@ -90,7 +90,6 @@ export default class Cart extends Component {
                             let e = el['data']['product']; 
                             return (                                
                                 <div key={e['id']} className='flx'>
-                                    {console.log(i,this.props.appProps.state.cart[i]?.num)}
                                     <div className="lft flx-c grow">
                                         <div className="name">{e['brand']}</div>
                                         <div className="sub">{e['name']}</div>

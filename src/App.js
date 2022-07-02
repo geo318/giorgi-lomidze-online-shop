@@ -188,7 +188,7 @@ class App extends React.Component {
               <Routes>
                 <Route path="/" element={<Category setProductId = {this.setProductId} calculateSum = {this.calculateSum} prices = {this.state.prices} itemPrice = {this.itemPrice} sumCartItems = {this.sumCartItems} addToCart = {this.addToCart} app = {this.state} switchCurrency = {this.switchCurrency} activeCategory = {this.state.category} activeCurrency = {this.state.activeCurrency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
                 <Route path="/cart" element={<Cart appProps = {this}/>} />
-                <Route path="/products/:productId" element={<Product id = {this.state.productID}/>}/>
+                <Route path="/products/:productId" element={<Product id = {this.state.productID} appProps = {this}/>}/>
                 <Route path="/*" element={<Error appState = {this}/>} />
               </Routes>
             </div>

@@ -140,15 +140,6 @@ class Category extends React.Component {
                     </div>
                 }
 
-                <div className='left'>
-                    {
-                        this.state.categories
-                        ? this.state.categories.map((e,i)=> (
-                            <a key = {i} href = "/"><span>{ e['name'] }</span></a>
-                        )) 
-                        : <div>loading...</div>
-                    }
-                </div>
             </>
         )
     }
