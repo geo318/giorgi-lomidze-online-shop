@@ -127,7 +127,9 @@ export default class Cart extends Component {
                                             <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.adjustCartItemNumber(e['id'],-1); this.props.appProps.state.cart?.[i]?.['num'] > 0 && this.setState({render : true})}}/>
                                         </div>
                                         <div className="carousel">
-                                            <Carousel check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
+                                            <Link to = {`/products/${e.id}`} className='link' onClick={()=> {this.props.appProps.setProductId(e.id); this.props.appProps.close()}}>
+                                                <Carousel check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
