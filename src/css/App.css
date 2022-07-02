@@ -18,6 +18,10 @@ a {
   text-decoration: none;
 }
 
+p {
+  margin: 0;
+}
+
 h2 {
   font-size: 42px;
   color: var(--c-text);
@@ -72,6 +76,10 @@ h2 {
 .left > a, 
 .currency_switch {
   position: relative;
+}
+
+.currency_switch:hover {
+  cursor: pointer;
 }
 
 .gallery {
@@ -447,7 +455,6 @@ div {
 
 .attr-name {
   font-size: 18px;
-  font-size: 18px;
   font-weight: 700;
   text-transform: uppercase;
   font-family: 'Roboto Condensed', sans-serif;
@@ -459,11 +466,11 @@ div {
 }
 
 .attr ul {
-  margin-top: 7px;
+  margin-top: 8px;
   margin-bottom: 16px;
 }
 
-.attr ul > li {
+.attr ul > li > div {
   margin-right: 8px;
 }
 
@@ -760,7 +767,9 @@ div {
 
 .thumb {
   width: 80px;
-  margin-top: 35px;
+  height: 80px;
+  margin-bottom: 35px;
+  justify-content: center;
 }
 
 .thumb:hover {
@@ -780,4 +789,30 @@ div {
 .pr-wrap {
   align-items: flex-start;
   margin-top: 80px;
+}
+.pr-wrap .attr {
+  padding: 43px 0 20px;
+}
+
+.pr-buy {
+  padding: 30px 0 40px;
+}
+.pr-wrap .attr .attr-txt {
+  margin-right: 12px;
+}
+.pr-buy button {
+  margin: 0;
+  width: 100%;
+  font-size: 16px;
+}
+
+.pr-footer-desc {
+  font-size: 16px;
+  line-height: 26px;
+  font-weight: 400;
+  font-family: 'Roboto',sans-serif;
+}
+
+.thumbnails {
+  margin-right: 30px;
 }

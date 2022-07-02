@@ -5,6 +5,7 @@ import CartSVG from '../icons/cartSVG'
 import arrow from '../icons/arrow.svg'
 import {BrowserRouter as Router, Link} from 'react-router-dom'
 import Cart from './cart';
+
 const categoriesQuery = `
     query {
         categories {
@@ -44,7 +45,7 @@ class Header extends React.Component {
     }
     
     componentDidMount() {
-        document.querySelector('body').addEventListener('click',()=> {this.dropperHide();})
+        document.querySelector('body').addEventListener('click', ()=> {this.dropperHide();})
 
         fetchQuery(categoriesQuery).then(data => {
             this.setState( {categories : data['data']['categories']} )
@@ -62,9 +63,9 @@ class Header extends React.Component {
             return this.dropperHide(e)
         }
         e.stopPropagation();
-        this.setState({currencyDrop: {display: "block",visibility: "hidden"}})
+        this.setState({currencyDrop: {display: "block", visibility: "hidden"}})
         let timeout = setTimeout(()=>{
-            this.setState({currencyDrop: {display: "block",visibility: "visible"}})
+            this.setState({currencyDrop: {display: "block", visibility: "visible"}})
         },100);
         if(this.state.currencyDrop.visibility === "visible")
         clearTimeout(timeout);
@@ -74,9 +75,9 @@ class Header extends React.Component {
     dropperHide(e) {
         if(this.state.currencyDrop.display === "none") return
 
-        this.setState({currencyDrop: {display: "block",visibility: "hidden"}})
+        this.setState({currencyDrop: {display: "block", visibility: "hidden"}})
         let timeout = setTimeout(()=>{
-            this.setState({currencyDrop: {display: "none",visibility: "hidden"}})
+            this.setState({currencyDrop: {display: "none", visibility: "hidden"}})
         }, 100);
         if(this.state.currencyDrop.display === "none")
         clearTimeout(timeout);

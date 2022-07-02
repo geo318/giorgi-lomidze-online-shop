@@ -1,6 +1,5 @@
 import React from "react";
 import fetchQuery from "./fetchQuery";
-import Carousel from "./carousel";
 
 const ProductDetailsQuery = `
     query getProduct($product : String!){
@@ -41,7 +40,7 @@ export default class Product extends React.Component {
         }
     }
     componentDidMount() {
-        fetchQuery(ProductDetailsQuery, {product : this.props.id}).then(data => this.setState({product : data}))
+        fetchQuery(ProductDetailsQuery, {product : this.props.appProps.state.productID}).then(data => this.setState({product : data}))
     }
     
 
@@ -58,7 +57,7 @@ export default class Product extends React.Component {
                                     <div className="thumbnails flx flx-c">
                                         {
                                             elem['gallery'].map((img,i) => {
-                                                return <div className = "thumb" onClick={()=> this.setState({currentImg : i})} key = {i}><img src={img} alt = ""/></div>
+                                                return <div className = "thumb flx" onClick={()=> this.setState({currentImg : i})} key = {i}><img src={img} alt = ""/></div>
                                             })
                                         }
                                     </div>
@@ -76,7 +75,7 @@ export default class Product extends React.Component {
                                                 <ul className="flx">
                                                     {
                                                         items['items'].map(i => (
-                                                            <li className={  i['value'] === params?.[params.findIndex((el)=> el.id === elem.id)]?.attr[params?.[params.findIndex((el)=> el.id === elem.id)]?.attr.findIndex((el)=>el.name === items['name'])]?.param ? 'active-param' : null  } 
+                                                            <li className={ i['value'] === params?.[params.findIndex((el)=> el.id === elem.id)]?.attr[params?.[params.findIndex((el)=> el.id === elem.id)]?.attr.findIndex((el)=>el.name === items['name'])]?.param ? 'active-param' : null } 
                                                                 onClick = {() => this.props.appProps.setItemParameters(elem['id'], items['name'], i['value'])} key = {i['id']} data-value={i['id']}>
                                                                 {
                                                                     items.id === 'Color'
@@ -96,10 +95,10 @@ export default class Product extends React.Component {
                                     <span>{elem['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['currency']['symbol']}</span>
                                     <span>{elem['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['amount']}</span>
                                 </div>
-                                <div>
-                                    <button className="footer-but order checkout" onClick = { ()=>this.props.close() }>add to cart</button>
+                                <div className="pr-buy">
+                                    <button className="footer-but order checkout" onClick = { ()=> this.addToCart() }>add to cart</button>
                                 </div>
-                                <div dangerouslySetInnerHTML={{__html: elem['description']}}/>
+                                <div className="pr-footer-desc" dangerouslySetInnerHTML={{__html: elem['description']}}/>
                             </div>
                         </div>
                     :   <div className='loading_wrap'>
