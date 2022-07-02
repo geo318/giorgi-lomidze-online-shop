@@ -128,7 +128,7 @@ class Category extends React.Component {
                                         </div>
                                         <div className="desc">
                                             <p>{e['name']}</p>
-                                            <div>
+                                            <div className='cat-price'>
                                                 <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['currency']['symbol']}</span>
                                                 <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']}</span>
                                             </div>

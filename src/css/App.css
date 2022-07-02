@@ -816,3 +816,9 @@ div {
 .thumbnails {
   margin-right: 30px;
 }
+
+.product_wrap .desc p,
+.cat-price {
+  font-size: 18px;
+  line-height: 28px;
+}
