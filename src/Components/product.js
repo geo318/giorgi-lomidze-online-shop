@@ -1,8 +1,9 @@
 import React from "react";
-import fetchQuery from "../GraphQL/fetchQuery";
-import { ProductDetailsQuery } from "../GraphQL/querries";
-import Attributes from "./attributes";
-import Loading from "./loading";
+import fetchQuery from "../querries/fetchQuery";
+import { ProductDetailsQuery } from "../querries/querries";
+import Attributes from "./page-components/attributes";
+import Price from "./page-components/price";
+import Loading from "./page-components/loading";
 
 export default class Product extends React.Component {
     constructor(props) {
@@ -14,13 +15,13 @@ export default class Product extends React.Component {
     }
     
     componentDidMount() {
-        let productID ;
-        this.props.appProps.state.productID 
-        ? productID = this.props.appProps.state.productID 
-        : productID = JSON.parse(localStorage.getItem('app-state'))['productID'];
+        let productID =
+        this.props.appProps.state.productID
+        ? this.props.appProps.state.productID 
+        : JSON.parse(localStorage.getItem('app-state'))['productID'];
 
-        fetchQuery(ProductDetailsQuery, {product : productID}).then(data => this.setState({product : data}))
-        this.setState({currentImg : 0})
+        fetchQuery(ProductDetailsQuery, {product : productID}).then(data => this.setState({product : data}));
+        this.setState({currentImg : 0});
     }
 
     addToCart() {
@@ -60,8 +61,7 @@ export default class Product extends React.Component {
                                 </div>
                                 <div className="attr-name">price:</div>
                                 <div className="price">
-                                    <span>{elem['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['currency']['symbol']}</span>
-                                    <span>{elem['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['amount']}</span>
+                                    <Price price = {elem} appProps = {this.props.appProps}/>
                                 </div>
                                 <div className="pr-buy">
                                     <button className="footer-but order checkout" onClick = { ()=> this.addToCart() }>add to cart</button>
@@ -73,7 +73,6 @@ export default class Product extends React.Component {
                         
                 }
             </>
-            
             
         )
     }

@@ -1,5 +1,5 @@
 import React from "react";
-import arrow from '../icons/carousel-arrow.svg';
+import arrow from '../../icons/carousel-arrow.svg';
 
 export default class Carousel extends React.Component {
     constructor(props) {

@@ -1,10 +1,11 @@
 import React, {Component} from "react";
-import fetchQuery from '../GraphQL/fetchQuery';
-import Carousel from "./carousel";
-import {BrowserRouter as Router, Link} from 'react-router-dom';
-import { ProductDetailsQuery } from "../GraphQL/querries";
-import Attributes from "./attributes";
-import Loading from "./loading";
+import fetchQuery from '../querries/fetchQuery';
+import Carousel from "./page-components/carousel";
+import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { ProductDetailsQuery } from "../querries/querries";
+import Attributes from "./page-components/attributes";
+import Price from "./page-components/price";
+import Loading from "./page-components/loading";
 
 export default class Cart extends Component {
     constructor(props) {
@@ -12,32 +13,33 @@ export default class Cart extends Component {
         this.state = {
             data : [],
             loading : true,
-            render : false
+            render : false,
         }
         this.fetchCartItems = this.fetchCartItems.bind(this);
     }
 
     componentDidMount() {
-        this.fetchCartItems()
+        this.fetchCartItems();
     }
 
     componentDidUpdate(prevProps,prevState,snapshot) {
+        
         if(this.state.render !== prevState.render)
-            return this.fetchCartItems()
+            return this.fetchCartItems();
     }
 
     fetchCartItems() {
         let array = [];
         this.props.appProps.state.cart.forEach((e) => {
-            array.push(fetchQuery(ProductDetailsQuery, {product : e['id']}))
+            array.push(fetchQuery(ProductDetailsQuery, { product : e['id'] }));
         })
 
         Promise.all(array).then(data => {
             this.setState({data : data});
-            this.setState({loading: false})
-            this.setState({cartNum : this.state.data.length })
+            this.setState({loading: false});
+            this.setState({cartNum : this.state.data.length });
         })
-        this.setState({render : false})
+        this.setState({ render : false });
     }
 
     render() {
@@ -47,8 +49,8 @@ export default class Cart extends Component {
         const tax = 21; // % //
         return (
             <>
-                {this.props.check == null && <h3 className="cart_header">cart</h3>}
-                {this.props.check && <div className="cart-drop-header"><span>My Bag,</span><span>{` ${cartItemNum} item${cartItemNum > 1 ? 's' : ""}`}</span></div>}
+                { this.props.check == null && <h3 className="cart_header">cart</h3> }
+                { this.props.check && <div className="cart-drop-header"><span>My Bag,</span><span>{` ${cartItemNum} item${cartItemNum > 1 ? 's' : ""}`}</span></div> }
                 <div className="cart_products">
                     {    
                         this.state.loading
@@ -63,8 +65,7 @@ export default class Cart extends Component {
                                         <div className="name">{e['brand']}</div>
                                         <div className="sub">{e['name']}</div>
                                         <div className="price">
-                                            <span>{e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['currency']['symbol']}</span>
-                                            <span>{e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['amount']}</span>
+                                            <Price price = {e} appProps = {this.props.appProps}/>
                                         </div>
                                         <div className="attr">
                                             <Attributes elem = {e} params = {cartParams} setItemParameters = {this.props.appProps.setItemParameters}/>
@@ -87,9 +88,9 @@ export default class Cart extends Component {
                     }
                 </div>
                 <div className="total">
-                    { this.props.check == null && <div><span>{`Tax ${tax}%:`}</span><span>{this.props.appProps.state.symbol}{(this.props.appProps.calculateSum() * tax / 100).toFixed(2)}</span></div> }
+                    { this.props.check == null && <div><span>{`Tax ${tax}%:`}</span><span>{ this.props.appProps.state.symbol }{ (this.props.appProps.calculateSum() * tax / 100).toFixed(2)}</span></div> }
                     { this.props.check == null && <div><span>quantity:</span><span>{ this.props.appProps.state.cartItemNum }</span></div> }
-                    <div><span>total</span><span>{this.props.appProps.state.symbol}{this.props.appProps.calculateSum().toFixed(2)}</span></div>
+                    <div><span>total</span><span>{this.props.appProps.state.symbol }{ this.props.appProps.calculateSum().toFixed(2) }</span></div>
                     { this.props.check == null && <button className="order">order</button> }
                     {
                         this.props.check && 

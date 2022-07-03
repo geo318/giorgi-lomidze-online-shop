@@ -1,12 +1,12 @@
 import React from 'react'
-import fetchQuery from '../GraphQL/fetchQuery';
+import fetchQuery from '../querries/fetchQuery';
 import logo from '../icons/logo.svg'
 import CartSVG from '../icons/cartSVG'
 import arrow from '../icons/arrow.svg'
 import {BrowserRouter as Router, Link} from 'react-router-dom'
 import Cart from './cart';
-import { categoriesQuery, currenciesQuery } from '../GraphQL/querries';
-import Loading from './loading';
+import { categoriesQuery, currenciesQuery } from '../querries/querries';
+import Loading from './page-components/loading';
 
 class Header extends React.Component {
     constructor(props) {
@@ -28,21 +28,21 @@ class Header extends React.Component {
     
     componentDidMount() {
         
-        this.setState({cartDrop : false,currencyDrop : {display: "none",visibility: "hidden"}})
-        document.querySelector('body').addEventListener('click', ()=> {this.dropperHide();})
+        this.setState({cartDrop : false,currencyDrop : {display: "none",visibility: "hidden"}});
+        document.querySelector('body').addEventListener('click', ()=> this.dropperHide());
 
         fetchQuery(categoriesQuery).then(data => {
-            this.setState( {categories : data['data']['categories']} )
+            this.setState( {categories : data['data']['categories']} );
         })
 
         fetchQuery(currenciesQuery).then(data => {
-            this.setState( {currencies : data['data']['currencies']} )
+            this.setState( {currencies : data['data']['currencies']} );
         })
     }
 
     componentDidUpdate(prevProps, prevState) {       
         if(prevProps.symbol !== this.props.symbol){
-            this.animate()
+            this.animate();
         }
     }
 
@@ -53,8 +53,8 @@ class Header extends React.Component {
         }
         e.stopPropagation();
         this.setState({currencyDrop: {display: "block", visibility: "hidden"}})
-        let timeout = setTimeout(()=>{
-            this.setState({currencyDrop: {display: "block", visibility: "visible"}})
+        let timeout = setTimeout(()=> {
+            this.setState({currencyDrop: {display: "block", visibility: "visible"}});
         },100);
         if(this.state.currencyDrop.visibility === "visible")
         clearTimeout(timeout);
@@ -64,9 +64,9 @@ class Header extends React.Component {
     dropperHide(e) {
         if(this.state.currencyDrop.display === "none") return
 
-        this.setState({currencyDrop: {display: "block", visibility: "hidden"}})
+        this.setState({currencyDrop: {display: "block", visibility: "hidden"}});
         let timeout = setTimeout(()=>{
-            this.setState({currencyDrop: {display: "none", visibility: "hidden"}})
+            this.setState({currencyDrop: {display: "none", visibility: "hidden"}});
         }, 100);
 
         if(this.state.currencyDrop.display === "none")
@@ -74,9 +74,9 @@ class Header extends React.Component {
     }
 
     animate() {
-        this.props.detectNewContent("new")
+        this.props.appProps.detectNewContent("new");
         setTimeout(()=> {
-            this.props.detectNewContent("old")
+            this.props.appProps.detectNewContent("old");
         }, 300)
     }
 
@@ -108,20 +108,20 @@ class Header extends React.Component {
         const currencyDropdown = this.state.currencies
             ? this.state.currencies.map((e, i) => (
                 <li
-                    key={ i }
-                    id={ e['label'] }
-                    className={ e['symbol'] === this.props.symbol ? 'cur_line active' : 'cur_line' }
-                    onClick={ () => { this.props.currencyFilter(e['label']); this.props.symbolHandle(e['symbol']); } }
+                    key = { i }
+                    id = { e['label'] }
+                    className = { e['symbol'] === this.props.symbol ? 'cur_line active' : 'cur_line' }
+                    onClick = { () => { this.props.appProps.currencyFilter(e['label']); this.props.appProps.symbolHandle(e['symbol']); } }
                 >
-                    <span className='symbol'>{ e['symbol'] }</span>
-                    <span className='label'>{ e['label'] }</span>
+                    <span className = 'symbol'>{ e['symbol'] }</span>
+                    <span className = 'label'>{ e['label'] }</span>
                 </li>
             ))
             : <Loading/>;
 
         const categoryMenu = this.state.categories
             ? this.state.categories.map((e, i) => (
-                <Link to = "/" className={ this.props.activeCategory === e['name'] ? 'cat act' : 'cat' } key={ i } id={ e['name']} onClick={() => { this.props.categoryFilter(e['name']);} }>
+                <Link to = "/" className = { this.props.appProps.state.category === e['name'] ? 'cat act' : 'cat' } key = { i } id={ e['name']} onClick = {() => { this.props.appProps.categoryFilter(e['name']);} }>
                     <span>{ e['name'] }</span>
                 </Link>
             ))
@@ -145,7 +145,7 @@ class Header extends React.Component {
                         <div className='right flx'>
                             <div className='flx flx-rr'>
                                 <div className='cart flx' onClick = {(e)=> this.dropBag(e) }>
-                                    { this.props.cartItemNum > 0 && <span className = 'num'>{ this.props.cartItemNum }</span> }
+                                    { this.props.appProps.state.cartItemNum > 0 && <span className = 'num'>{ this.props.appProps.state.cartItemNum }</span> }
                                     { 
                                         <CartSVG fill="#43464E"/> 
                                     }
@@ -158,10 +158,10 @@ class Header extends React.Component {
 
                                 <div className="currency_switch main_drop" onClick={ (e)=>this.dropper(e) }>
                                     <div className='drop_curr'>
-                                        <span className = {`curr_symbol ${this.props.newContent}`}>{ this.props.symbol }</span>
+                                        <span className = {`curr_symbol ${this.props.appProps.state.newContent}`}>{ this.props.symbol }</span>
                                         <img className = { this.state.currencyDrop.display === "block" ? "rotateUP" : "rotateDOWN" } src = { arrow } alt='arrow'/>
                                     </div>
-                                    <div className = {`dropdown curr_dropdown ${this.state.currencyDrop.display} ${this.props.newContent}  ${this.state.currencyDrop.visibility}`}>
+                                    <div className = {`dropdown curr_dropdown ${this.state.currencyDrop.display} ${this.props.appProps.state.newContent}  ${this.state.currencyDrop.visibility}`}>
                                         <ul>
                                             {
                                                 currencyDropdown
@@ -174,7 +174,7 @@ class Header extends React.Component {
                     </div>
                 </div>
                 
-                { this.state.cartDrop && <div className='overlay'/>}
+                { this.state.cartDrop && <div className='overlay'/> }
             </>
         )
     }

@@ -1,12 +1,12 @@
 import React from 'react';
 import './css/App.css';
-import Header from './Components/header';
-import Category from './Components/categories';
-import Cart from './Components/cart';
-import Product from './Components/product';
-import Error from './Components/error';
-import fetchQuery from './GraphQL/fetchQuery';
-import { ProductsPriceQuery } from './GraphQL/querries';
+import Header from './components/header';
+import Category from './components/categories';
+import Cart from './components/cart';
+import Product from './components/product';
+import Error from './components/page-components/error';
+import fetchQuery from './querries/fetchQuery';
+import { ProductsPriceQuery } from './querries/querries';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 class App extends React.Component {
@@ -45,20 +45,20 @@ class App extends React.Component {
       let array = [];
       this.state.cart.forEach((e)=> 
         array.push(fetchQuery(ProductsPriceQuery, {product : e.id}))
-      )
+      );
       /* 
         to prevent data loss upon fetching a querry, 
         data is stored in a helper array until the fetching process is complete
       */
       Promise.all(array).then(data => {
-        this.setState({prices:[]})
+        this.setState({prices:[]});
         let priceArr = [];
         data.forEach((el)=> {
-          let e = el.data.product
-          priceArr.push({id : e.id, price: e['prices'][this.switchCurrency(this.state.activeCurrency)]['amount']})
+          let e = el.data.product;
+          priceArr.push({id : e.id, price: e['prices'][this.switchCurrency(this.state.activeCurrency)]['amount']});
         })
-        this.setState({prices : priceArr})
-        this.calculateSum()
+        this.setState({prices : priceArr});
+        this.calculateSum();
       })
     }
   }
@@ -71,7 +71,7 @@ class App extends React.Component {
     if(indx < 0) {
       return this.setState(
         { cartItemParams : [...array, {id: id, attr : [ {name : name, param : param} ]}] }
-      )
+      );
     } 
     
     let attrArr = array[indx]['attr'];
@@ -94,29 +94,29 @@ class App extends React.Component {
         ]},
         ...array.slice(indx + 1)
       ]}
-    )
+    );
   }
 
   // sumps up current prices for all items in the cart
   calculateSum = () => {
-    let sum = this.state.prices.reduce((total,current,i) => total += current.price * this.state.cart[i]['num'], 0)
+    let sum = this.state.prices.reduce((total,current,i) => total += current.price * this.state.cart[i]['num'], 0);
     return sum
   }
 
   symbolHandle(val) {
-    this.setState({symbol : val})
+    this.setState({symbol : val});
   }
 
   itemPrice = (id, amount) => {
     let pricesArray = this.state.prices;
     if(pricesArray.every(e => id !== e.id)) {
-      this.setState({ prices: [...pricesArray, {id: id, price : amount}] })
+      this.setState({ prices: [...pricesArray, {id: id, price : amount}] });
       return
     }
     if(pricesArray.some(e => id === e.id && e.price === amount)) return
 
-      let indx = pricesArray.findIndex((e) => id === e['id'])
-      this.setState({ prices: [...pricesArray.slice(0, indx), {id: id, price : amount}, ...pricesArray.slice(indx + 1)] })
+      let indx = pricesArray.findIndex((e) => id === e['id']);
+      this.setState({ prices: [...pricesArray.slice(0, indx), {id: id, price : amount}, ...pricesArray.slice(indx + 1)] });
   }
 
   // sums up total number of items in the cart
@@ -126,8 +126,8 @@ class App extends React.Component {
       (total, curr) => { 
         total += curr['num'] 
         return total
-      }, 0) 
-    this.setState( { cartItemNum : num } )
+      }, 0);
+    this.setState( { cartItemNum : num } );
   }
 
   // increasing product number
@@ -143,7 +143,7 @@ class App extends React.Component {
       return
     }
     this.setState({ cart: [...cartArray.slice(0, indx),{id : productId, num : productNum},...cartArray.slice(indx + 1) ] });
-    this.setState({ cartItemNum : this.state.cartItemNum + operation })
+    this.setState({ cartItemNum : this.state.cartItemNum + operation });
   }
 
   addToCart = productId => {
@@ -192,11 +192,11 @@ class App extends React.Component {
     return (
       <>
         <Router>
-        <Header appProps = {this} symbolHandle = {this.symbolHandle} symbol = {this.state.symbol} calculateSum = {this.calculateSum} cartItemNum = {this.state.cartItemNum} categoryFilter = {this.categoryFilter} currencyFilter = {this.currencyFilter} activeCategory = {this.state.category} detectNewContent = {this.detectNewContent} newContent = {this.state.newContent}/>      
+        <Header appProps = {this} symbol = {this.state.symbol} activeCategory = {this.state.category}/>      
           <div className='main'>
             <div className='wrapper'>
               <Routes>
-                <Route path="/" element={<Category setProductId = {this.setProductId} calculateSum = {this.calculateSum} prices = {this.state.prices} itemPrice = {this.itemPrice} sumCartItems = {this.sumCartItems} addToCart = {this.addToCart} app = {this.state} switchCurrency = {this.switchCurrency} activeCategory = {this.state.category} activeCurrency = {this.state.activeCurrency} changeDetect = {this.changeDetect} newContent = {this.state.newContent}/>}/>
+                <Route path="/" element={<Category category = {this.state.category} appProps = {this}/>}/>
                 <Route path="/cart" element={<Cart appProps = {this}/>} />
                 <Route path="/products/:productId" element={<Product appProps = {this}/>}/>
                 <Route path="/*" element={<Error/>} />

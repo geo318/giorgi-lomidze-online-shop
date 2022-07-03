@@ -1,9 +1,10 @@
 import React from 'react';
-import fetchQuery from '../GraphQL/fetchQuery';
+import fetchQuery from '../querries/fetchQuery';
 import CartSVG from '../icons/cartSVG';
 import {BrowserRouter as Router, Link} from 'react-router-dom'
-import { ProductsQuery } from '../GraphQL/querries';
-import Loading from './loading';
+import { ProductsQuery } from '../querries/querries';
+import Price from './page-components/price';
+import Loading from './page-components/loading';
 
 class Category extends React.Component {
     constructor(props) {
@@ -17,38 +18,38 @@ class Category extends React.Component {
         }
         this.productsFetch = this.productsFetch.bind(this);
         this.cardHover = this.cardHover.bind(this);
-        this.onScroll = this.onScroll.bind(this)
+        this.onScroll = this.onScroll.bind(this);
         this.setScrollState = this.setScrollState.bind(this);
     }
 
     componentDidMount() {
-        this.productsFetch(this.props.activeCategory)
+        this.productsFetch(this.props.appProps.state.category)
         this.onScroll()
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevProps.activeCategory !== this.props.activeCategory) {
-            this.setState({data : []})
-            this.productsFetch(this.props.activeCategory)
+        if(prevProps.category !== this.props.category) {
+            this.setState({data : []});
+            this.productsFetch(this.props.category);
             return
         }
             
         if(prevState.page < this.state.page)
-            return this.productsFetch(this.props.activeCategory)
+            return this.productsFetch(this.props.appProps.state.category)
     }
 
     async productsFetch(category) {
         await fetchQuery(ProductsQuery, {cat : category})
         .then(data => {
-            this.setState({loading : true})
+            this.setState({loading : true});
             const resultData = data['data']['category']['products'];
             
             // to mimic loading data from server
             setTimeout(() => {
-                this.setState({dataLength : resultData.length})
-                this.setState( {data : resultData.slice(0, this.state.page)})
+                this.setState({ dataLength : resultData.length });
+                this.setState({ data : resultData.slice(0, this.state.page) });
                 
-            this.setState({loading : false})
+            this.setState({ loading : false });
             }, 350);    
         })
     }
@@ -60,25 +61,25 @@ class Category extends React.Component {
                 window.innerHeight + document.documentElement.scrollTop 
                 === document.documentElement.offsetHeight
             ) {
-            this.setScrollState()
+            this.setScrollState();
             }
         }
         window.addEventListener("scroll", scrolled);
     }
 
     setScrollState() {
-        this.setState({page : this.state.page + 6})
+        this.setState({page : this.state.page + 6});
     }
 
     cardHover(id, amount) {
-        this.props.addToCart(id, +1);
-        this.props.itemPrice(id, amount);
+        this.props.appProps.addToCart(id, +1);
+        this.props.appProps.itemPrice(id, amount);
     }
 
     render() {
         return (
             <> 
-                <h2 className='g_h2'>{this.props.activeCategory}</h2>
+                <h2 className='g_h2'>{ this.props.appProps.state.category }</h2>
                 <div className='gallery'>
                     {
                         this.state.data &&
@@ -92,12 +93,12 @@ class Category extends React.Component {
                                 >
                                     
                                         <div className = "img_wrap">
-                                            <Link to = {`/products/${e.id}`} className='link' onClick={()=> this.props.setProductId(e.id)}>
+                                            <Link to = {`/products/${e.id}`} className='link' onClick={()=> this.props.appProps.state.setProductId(e.id)}>
                                                 <img src={e['gallery'][0]} alt={e['name']}/>
                                             </Link>
                                             { 
                                                 e.inStock 
-                                                ?   <div className='hover_cart' onClick={() => this.cardHover(e['id'],e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount'])}>
+                                                ?   <div className='hover_cart' onClick={() => this.cardHover(e['id'],e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['amount'])}>
                                                         { <CartSVG fill="#fff"/> }
                                                     </div>
                                                 : <div className="outOfStock flx">out of stock</div>
@@ -106,8 +107,7 @@ class Category extends React.Component {
                                         <div className="desc">
                                             <p>{e['name']}</p>
                                             <div className='cat-price'>
-                                                <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['currency']['symbol']}</span>
-                                                <span>{e['prices'][this.props.switchCurrency(this.props.activeCurrency)]['amount']}</span>
+                                                <Price price = {e} appProps = {this.props.appProps}/>
                                             </div>
                                         </div>
                                 </div>
