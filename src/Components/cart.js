@@ -1,37 +1,10 @@
 import React, {Component} from "react";
-import fetchQuery from './fetchQuery';
+import fetchQuery from '../GraphQL/fetchQuery';
 import Carousel from "./carousel";
 import {BrowserRouter as Router, Link} from 'react-router-dom';
-
-const ProductDetailsQuery = `
-    query getProduct($product : String!){
-        product(id : $product) {
-            id
-            name
-            brand
-            gallery
-            inStock
-            description
-            prices {
-                currency{
-                  symbol
-                  label
-                }
-                amount
-            }
-            attributes {
-                id
-                name
-                type
-                items {
-                    displayValue
-                    value
-                    id
-                }
-            }
-        }
-    }
-`;
+import { ProductDetailsQuery } from "../GraphQL/querries";
+import Attributes from "./attributes";
+import Loading from "./loading";
 
 export default class Cart extends Component {
     constructor(props) {
@@ -80,9 +53,7 @@ export default class Cart extends Component {
                     {    
                         this.state.loading
                         ? 
-                            <div className='loading_wrap'>
-                                <div className='loading'/>
-                            </div>
+                            <Loading/>
                         : 
                             cart.map((el,i) => {
                             let e = el['data']['product']; 
@@ -96,27 +67,7 @@ export default class Cart extends Component {
                                             <span>{e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['amount']}</span>
                                         </div>
                                         <div className="attr">
-                                            {
-                                                e['attributes'].map((items,i) => (                                                       
-                                                    <div key = {i}>
-                                                        <span className="attr-name">{items['name']}:</span>
-                                                        <ul className="flx">
-                                                            {
-                                                                items['items'].map(i => (
-                                                                    <li className={  i['value'] === cartParams?.[cartParams.findIndex((el)=> el.id === e.id)]?.attr[cartParams?.[cartParams.findIndex((el)=> el.id === e.id)]?.attr.findIndex((el)=>el.name === items['name'])]?.param ? 'active-param' : null  } 
-                                                                        onClick = {() => this.props.appProps.setItemParameters(e['id'], items['name'], i['value'])} key = {i['id']} data-value={i['id']}>
-                                                                        {
-                                                                            items.id === 'Color'
-                                                                            ? <div className="color-batch" style={ {backgroundColor : i['value']} }/>
-                                                                            : <div className="attr-txt">{i['value']}</div>
-                                                                        }
-                                                                    </li>
-                                                                ))
-                                                            }
-                                                        </ul>
-                                                    </div>
-                                                ))
-                                            }
+                                            <Attributes elem = {e} params = {cartParams} setItemParameters = {this.props.appProps.setItemParameters}/>
                                         </div>
                                     </div>
                                     <div className="rgt flx">
@@ -142,12 +93,12 @@ export default class Cart extends Component {
                     { this.props.check == null && <button className="order">order</button> }
                     {
                         this.props.check && 
-                            <div className="cart-dropdown-footer flx">
-                                <Link className = "footer-but" to = "/cart">
-                                    <button className="order view-bag" onClick = { ()=>this.props.close() }>view bag</button>
-                                </Link>
-                                <button className="footer-but order checkout" onClick = { ()=>this.props.close() }>check out</button>
-                            </div>
+                        <div className="cart-dropdown-footer flx">
+                            <Link className = "footer-but" to = "/cart">
+                                <button className="order view-bag" onClick = { ()=>this.props.close() }>view bag</button>
+                            </Link>
+                            <button className="footer-but order checkout" onClick = { ()=>this.props.close() }>check out</button>
+                        </div>
                     }
                 </div>
             </>

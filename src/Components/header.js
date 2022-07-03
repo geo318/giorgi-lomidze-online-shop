@@ -1,30 +1,12 @@
 import React from 'react'
-import fetchQuery from './fetchQuery';
+import fetchQuery from '../GraphQL/fetchQuery';
 import logo from '../icons/logo.svg'
 import CartSVG from '../icons/cartSVG'
 import arrow from '../icons/arrow.svg'
 import {BrowserRouter as Router, Link} from 'react-router-dom'
 import Cart from './cart';
-
-const categoriesQuery = `
-    query {
-        categories {
-            name
-            products {
-                id
-            }
-        }
-    }
-`;
-
-const currenciesQuery = `
-    {
-        currencies {
-            symbol
-            label
-        }
-    }
-`;
+import { categoriesQuery, currenciesQuery } from '../GraphQL/querries';
+import Loading from './loading';
 
 class Header extends React.Component {
     constructor(props) {
@@ -46,8 +28,6 @@ class Header extends React.Component {
     
     componentDidMount() {
         
-        let localState = JSON.parse(localStorage.getItem('header-state'));
-        if(localState) this.setState(localState)
         this.setState({cartDrop : false,currencyDrop : {display: "none",visibility: "hidden"}})
         document.querySelector('body').addEventListener('click', ()=> {this.dropperHide();})
 
@@ -60,10 +40,7 @@ class Header extends React.Component {
         })
     }
 
-    componentDidUpdate(prevProps, prevState) {
-        
-        localStorage.setItem('header-state', JSON.stringify(this.state))
-        
+    componentDidUpdate(prevProps, prevState) {       
         if(prevProps.symbol !== this.props.symbol){
             this.animate()
         }
@@ -140,7 +117,7 @@ class Header extends React.Component {
                     <span className='label'>{ e['label'] }</span>
                 </li>
             ))
-            : <div>loading...</div>;
+            : <Loading/>;
 
         const categoryMenu = this.state.categories
             ? this.state.categories.map((e, i) => (
@@ -148,7 +125,7 @@ class Header extends React.Component {
                     <span>{ e['name'] }</span>
                 </Link>
             ))
-            : <div>loading...</div>;
+            : <Loading/>;
         return (
             <> 
                 <div className='header'>

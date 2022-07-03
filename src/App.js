@@ -5,23 +5,9 @@ import Category from './Components/categories';
 import Cart from './Components/cart';
 import Product from './Components/product';
 import Error from './Components/error';
-import {BrowserRouter as Router, Routes, Route} from 'react-router-dom'
-import fetchQuery from './Components/fetchQuery';
-
-const ProductsPriceQuery = `
-    query getProduct($product : String!){
-        product(id : $product) {
-          id
-          prices {
-            currency{
-              symbol
-              label
-            }
-            amount
-          }
-        }
-    }
-`;
+import fetchQuery from './GraphQL/fetchQuery';
+import { ProductsPriceQuery } from './GraphQL/querries';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 class App extends React.Component {
 
@@ -31,34 +17,39 @@ class App extends React.Component {
       category : 'all',
       activeCurrency : 'USD',
       newContent: 'old',
-      cart: [],
+      cart: [], // contains product id and number
       cartItemNum: 0,
       cartItemParams: [],
-      prices: [],
+      prices: [], // cart helper array holding product id and price
       sumTotal : 0,
-      productID : null,
-      symbol: '$',
+      productID : null, // passing product page to fetch product
+      symbol: '$', // displays an active currency symbol on navbar
     }
     this.symbolHandle = this.symbolHandle.bind(this);
     this.setItemParameters = this.setItemParameters.bind(this);
   }
 
   componentDidMount() {
-    this.sumCartItems(this.state.cart)
-    this.calculateSum()
-
+    this.sumCartItems(this.state.cart);
+    this.calculateSum();
+    
+    // using local storage to prevent data loss if page refreashed
     let localState = JSON.parse(localStorage.getItem('app-state'));
-    if(localState) this.setState(localState)
+    if(localState) this.setState(localState);
   }
 
   componentDidUpdate(prevProps, prevState) {
-    localStorage.setItem('app-state', JSON.stringify(this.state))
+    localStorage.setItem('app-state', JSON.stringify(this.state));
+
     if(prevState.activeCurrency !== this.state.activeCurrency) {
       let array = [];
       this.state.cart.forEach((e)=> 
         array.push(fetchQuery(ProductsPriceQuery, {product : e.id}))
       )
-        
+      /* 
+        to prevent data loss upon fetching a querry, 
+        data is stored in a helper array until the fetching process is complete
+      */
       Promise.all(array).then(data => {
         this.setState({prices:[]})
         let priceArr = [];
@@ -71,30 +62,42 @@ class App extends React.Component {
       })
     }
   }
+
+  // setting state for cart product attribiutes
+
   setItemParameters(id, name, param) {
     let array = this.state.cartItemParams;
     let indx = array.findIndex((e) => id === e['id']);
     if(indx < 0) {
-      this.setState(
+      return this.setState(
         { cartItemParams : [...array, {id: id, attr : [ {name : name, param : param} ]}] }
       )
-      return
     } 
     
     let attrArr = array[indx]['attr'];
     let attrIndx = array[indx]['attr'].findIndex((e) => name === e['name']);
+
     if(attrIndx < 0) {
-      this.setState(
-        { cartItemParams : [...array.slice(0,indx), {id: id, attr : [ ...attrArr,{name : name, param : param},...array.slice(indx + 1) ]}] }
-      )
-      return
+      return this.setState(
+        {cartItemParams : [
+          ...array.slice(0,indx), {id: id, attr : [ 
+            ...attrArr,{name : name, param : param},...array.slice(indx + 1) 
+          ]}
+        ]}
+      );
     }
 
-    this.setState(
-      { cartItemParams : [...array.slice(0,indx), {id: id, attr : [ ...attrArr.slice(0,attrIndx),{name : name, param : param},...attrArr.slice(attrIndx + 1) ]}] }
+    return this.setState({ 
+      cartItemParams : [
+        ...array.slice(0,indx), {id: id, attr : [
+          ...attrArr.slice(0,attrIndx), {name : name, param : param},...attrArr.slice(attrIndx + 1) 
+        ]},
+        ...array.slice(indx + 1)
+      ]}
     )
   }
 
+  // sumps up current prices for all items in the cart
   calculateSum = () => {
     let sum = this.state.prices.reduce((total,current,i) => total += current.price * this.state.cart[i]['num'], 0)
     return sum
@@ -103,8 +106,6 @@ class App extends React.Component {
   symbolHandle(val) {
     this.setState({symbol : val})
   }
-
-
 
   itemPrice = (id, amount) => {
     let pricesArray = this.state.prices;
@@ -118,6 +119,8 @@ class App extends React.Component {
       this.setState({ prices: [...pricesArray.slice(0, indx), {id: id, price : amount}, ...pricesArray.slice(indx + 1)] })
   }
 
+  // sums up total number of items in the cart
+
   sumCartItems = (arr) => { 
     let num = arr.reduce(
       (total, curr) => { 
@@ -127,8 +130,7 @@ class App extends React.Component {
     this.setState( { cartItemNum : num } )
   }
 
-
-
+  // increasing product number
   adjustCartItemNumber = (productId, operation)=> {
     let cartArray = this.state.cart;
     let indx = cartArray.findIndex((e) => productId === e['id']);

@@ -1,35 +1,8 @@
 import React from "react";
-import fetchQuery from "./fetchQuery";
-
-const ProductDetailsQuery = `
-    query getProduct($product : String!){
-        product(id : $product) {
-            id
-            name
-            brand
-            gallery
-            inStock
-            description
-            prices {
-                currency{
-                  symbol
-                  label
-                }
-                amount
-            }
-            attributes {
-                id
-                name
-                type
-                items {
-                    displayValue
-                    value
-                    id
-                }
-            }
-        }
-    }
-`;
+import fetchQuery from "../GraphQL/fetchQuery";
+import { ProductDetailsQuery } from "../GraphQL/querries";
+import Attributes from "./attributes";
+import Loading from "./loading";
 
 export default class Product extends React.Component {
     constructor(props) {
@@ -39,9 +12,12 @@ export default class Product extends React.Component {
             currentImg : 0
         }
     }
+    
     componentDidMount() {
-        let productID;
-        this.props.appProps.state.productID ? productID = this.props.appProps.state.productID : productID = JSON.parse(localStorage.getItem('app-state'))['productID'];
+        let productID ;
+        this.props.appProps.state.productID 
+        ? productID = this.props.appProps.state.productID 
+        : productID = JSON.parse(localStorage.getItem('app-state'))['productID'];
 
         fetchQuery(ProductDetailsQuery, {product : productID}).then(data => this.setState({product : data}))
         this.setState({currentImg : 0})
@@ -56,7 +32,6 @@ export default class Product extends React.Component {
         this.props.appProps.addToCart(this.props.appProps.state.productID);
     }
     
-
     render() {
         const params = this.props.appProps.state.cartItemParams;
         const elem = this.state.product?.['data']?.['product'];
@@ -81,27 +56,7 @@ export default class Product extends React.Component {
                                 <div className="name">{elem['brand']}</div>
                                 <div className="sub">{elem['name']}</div>
                                 <div className="attr">
-                                    {
-                                        elem['attributes'].map((items,i) => (                                                       
-                                            <div key = {i}>
-                                                <span className="attr-name">{items['name']}:</span>
-                                                <ul className="flx">
-                                                    {
-                                                        items['items'].map(i => (
-                                                            <li className={ i['value'] === params?.[params.findIndex((el)=> el.id === elem.id)]?.attr[params?.[params.findIndex((el)=> el.id === elem.id)]?.attr.findIndex((el)=>el.name === items['name'])]?.param ? 'active-param' : null } 
-                                                                onClick = {() => this.props.appProps.setItemParameters(elem['id'], items['name'], i['value'])} key = {i['id']} data-value={i['id']}>
-                                                                {
-                                                                    items.id === 'Color'
-                                                                    ? <div className="color-batch" style={ {backgroundColor : i['value']} }/>
-                                                                    : <div className="attr-txt">{i['value']}</div>
-                                                                }
-                                                            </li>
-                                                        ))
-                                                    }
-                                                </ul>
-                                            </div>
-                                        ))
-                                    }
+                                    <Attributes elem = {elem} params = {params} setItemParameters = {this.props.appProps.setItemParameters}/>
                                 </div>
                                 <div className="attr-name">price:</div>
                                 <div className="price">
@@ -114,9 +69,7 @@ export default class Product extends React.Component {
                                 <div className="pr-footer-desc" dangerouslySetInnerHTML={{__html: elem['description']}}/>
                             </div>
                         </div>
-                    :   <div className='loading_wrap'>
-                            <div className='loading'/>
-                        </div>
+                    :   <Loading/>
                         
                 }
             </>

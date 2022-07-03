@@ -1,27 +1,9 @@
 import React from 'react';
-import fetchQuery from './fetchQuery';
+import fetchQuery from '../GraphQL/fetchQuery';
 import CartSVG from '../icons/cartSVG';
 import {BrowserRouter as Router, Link} from 'react-router-dom'
-
-const ProductsQuery = `
-    query getProducts($cat: String!){
-        category(input:{title: $cat}){
-            products{
-                id
-                name
-                gallery
-                inStock
-                prices{
-                    currency{
-                        symbol
-                        label
-                    }
-                    amount
-                }
-            }
-        }
-    }
-`;
+import { ProductsQuery } from '../GraphQL/querries';
+import Loading from './loading';
 
 class Category extends React.Component {
     constructor(props) {
@@ -135,9 +117,7 @@ class Category extends React.Component {
                 </div>
                 {   
                     this.state.loading && 
-                    <div className='loading_wrap'>
-                        <div className='loading'/>
-                    </div>
+                    <Loading/>
                 }
 
             </>
