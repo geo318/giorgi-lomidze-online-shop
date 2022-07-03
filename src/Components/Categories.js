@@ -9,6 +9,7 @@ import Loading from './page-components/loading';
 class Category extends React.Component {
     constructor(props) {
         super(props)
+        this.gallery = React.createRef();
         this.state = {
             categories: [],
             data : [],
@@ -25,11 +26,15 @@ class Category extends React.Component {
     componentDidMount() {
         this.productsFetch(this.props.appProps.state.category)
         this.onScroll()
+        this.scrollCheck()
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if(prevState.dataLength < this.state.dataLength) {   
+            this.scrollCheck()
+        }
         if(prevProps.category !== this.props.category) {
-            this.setState({data : []});
+            this.setState({ data : [] });
             this.productsFetch(this.props.category);
             return
         }
@@ -53,13 +58,21 @@ class Category extends React.Component {
             }, 350);    
         })
     }
+
+    scrollCheck() {
+        console.log(this.gallery.current.offsetHeight + this.gallery.current.offsetTop, window.innerHeight)
+        if(this.state.dataLength < this.state.page) return
+        while(this.gallery.current.offsetHeight + this.gallery.current.offsetTop < window.innerHeight - 50) {
+            return this.setScrollState();
+        }
+    }
     
     onScroll() {
         const scrolled = () => {
-            if( this.state.dataLength < this.state.page) return
+            if(this.state.dataLength < this.state.page) return
             if(
-                window.innerHeight + document.documentElement.scrollTop 
-                === document.documentElement.offsetHeight
+                window.innerHeight + document.documentElement.scrollTop + 10
+                >= document.documentElement.offsetHeight
             ) {
             this.setScrollState();
             }
@@ -68,7 +81,7 @@ class Category extends React.Component {
     }
 
     setScrollState() {
-        this.setState({page : this.state.page + 6});
+        this.setState({ page : this.state.page + 6 });
     }
 
     cardHover(id, amount) {
@@ -80,7 +93,7 @@ class Category extends React.Component {
         return (
             <> 
                 <h2 className='g_h2'>{ this.props.appProps.state.category }</h2>
-                <div className='gallery'>
+                <div className='gallery' ref = {this.gallery}>
                     {
                         this.state.data &&
                         this.state.data.map((e,i) => (
