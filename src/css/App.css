@@ -419,8 +419,7 @@ img {
   border-top: 1px solid #E5E5E5;
 }
 
-.cart_products >
-div {
+.cart_products > div {
   padding: 24px 0;
 }
 
@@ -484,8 +483,7 @@ div {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
-.total > 
-div > 
+.total > div > 
 span:first-child {
   display: inline-block;
   font-size: 24px;
@@ -523,8 +521,7 @@ span:last-child {
   margin-top: 16px;
 }
 
-.attr 
-ul > 
+.attr ul > 
 li:hover {
   cursor: pointer;
   user-select: none;
@@ -640,7 +637,9 @@ li:hover {
   height: 24px;
 }
 
-.cart-dropdown .plus:before, .cart-dropdown .plus:after,  .cart-dropdown .minus:before {
+.cart-dropdown .plus:before, 
+.cart-dropdown .plus:after,  
+.cart-dropdown .minus:before {
   width: 9px;
   height: 9px;
 }

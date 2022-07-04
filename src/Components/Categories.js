@@ -55,7 +55,7 @@ class Category extends React.Component {
                 this.setState({ data : resultData.slice(0, this.state.page) });
                 
             this.setState({ loading : false });
-            }, 350);    
+            }, 350);
         })
     }
 

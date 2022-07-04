@@ -23,7 +23,9 @@ export default class Cart extends Component {
     }
 
     componentDidUpdate(prevProps,prevState,snapshot) {
-        
+        if(this.state.data.length > 0 && prevState.data.length !== this.state.data.length)
+            return localStorage.setItem('cart-data',JSON.stringify(this.state.data))
+            
         if(this.state.render !== prevState.render)
             return this.fetchCartItems();
     }
@@ -43,7 +45,8 @@ export default class Cart extends Component {
     }
 
     render() {
-        const cart = this.state.data;
+       
+        const cart = this.state.data.length > 0 ? this.state.data : localStorage.getItem('cart-data')? JSON.parse(localStorage.getItem('cart-data')) : [];
         const cartParams = this.props.appProps.state.cartItemParams;
         const cartItemNum = this.props.appProps.state.cartItemNum;
         const tax = 21; // % //
@@ -52,11 +55,11 @@ export default class Cart extends Component {
                 { this.props.check == null && <h3 className="cart_header">cart</h3> }
                 { this.props.check && <div className="cart-drop-header"><span>My Bag,</span><span>{` ${cartItemNum} item${cartItemNum > 1 ? 's' : ""}`}</span></div> }
                 <div className="cart_products">
-                    {    
-                        this.state.loading
-                        ? 
-                            <Loading/>
-                        : 
+                    {
+                        // this.state.loading
+                        // ? 
+                        //     <Loading/>
+                        // : 
                             cart.map((el,i) => {
                             let e = el['data']['product']; 
                             return (                                
