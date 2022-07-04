@@ -23,7 +23,7 @@ export default class Cart extends Component {
     }
 
     componentDidUpdate(prevProps,prevState,snapshot) {
-        if(this.state.data.length > 0 && prevState.data.length !== this.state.data.length)
+        if(prevState.data.length !== this.state.data.length)
             return localStorage.setItem('cart-data',JSON.stringify(this.state.data))
 
         if(this.state.render !== prevState.render)
@@ -46,7 +46,7 @@ export default class Cart extends Component {
 
     render() {
        
-        const cart = this.state.data.length > 0 ? this.state.data : localStorage.getItem('cart-data')? JSON.parse(localStorage.getItem('cart-data')) : [];
+        const cart = localStorage.getItem('cart-data')? JSON.parse(localStorage.getItem('cart-data')) : this.state.data;
         const cartParams = this.props.appProps.state.cartItemParams;
         const cartItemNum = this.props.appProps.state.cartItemNum;
         const tax = 21; // % //
