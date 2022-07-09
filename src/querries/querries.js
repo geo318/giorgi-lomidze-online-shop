@@ -28,12 +28,32 @@ const ProductDetailsQuery = `
     }
 `;
 
+const ProductAttrQuery = `
+    query getProduct($product : String!){
+        product(id : $product) {
+            id
+            inStock
+            attributes {
+                id
+                name
+                type
+                items {
+                    displayValue
+                    value
+                    id
+                }
+            }
+        }
+    }
+`;
+
 const ProductsQuery = `
     query getProducts($cat: String!){
         category(input:{title: $cat}){
             products{
                 id
                 name
+                brand
                 gallery
                 inStock
                 prices{
@@ -84,4 +104,4 @@ const currenciesQuery = `
     }
 `;
 
-export { ProductDetailsQuery, ProductsQuery, ProductsPriceQuery, categoriesQuery, currenciesQuery }
+export { ProductDetailsQuery, ProductAttrQuery, ProductsQuery, ProductsPriceQuery, categoriesQuery, currenciesQuery }

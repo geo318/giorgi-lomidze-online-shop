@@ -1,5 +1,6 @@
 import React from "react";
 import arrow from '../../icons/carousel-arrow.svg';
+import { Link } from 'react-router-dom';
 
 export default class Carousel extends React.Component {
     constructor(props) {
@@ -21,7 +22,9 @@ export default class Carousel extends React.Component {
                     </div>
                 }
                 <div className="img-wrap flx">
-                    <img src = {array[current]} alt={this.props.alt}/>
+                    <Link to = {`/products/${this.props.id}`} className='link' onClick={()=> {this.props.click(this.props.id); this.props.check && this.props.close()}}>
+                        <img src = {array[current]} alt={this.props.alt}/>
+                    </Link>
                 </div>
                 {   
                     this.props.check == null &&

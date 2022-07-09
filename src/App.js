@@ -66,28 +66,21 @@ class App extends React.Component {
   // setting state for cart product attribiutes
 
   setItemParameters(id, name, param) {
+
     let array = this.state.cartItemParams;
     let indx = array.findIndex((e) => id === e['id']);
+
     if(indx < 0) {
-      return this.setState(
+      this.setState(
         { cartItemParams : [...array, {id: id, attr : [ {name : name, param : param} ]}] }
       );
+      return
     } 
     
     let attrArr = array[indx]['attr'];
     let attrIndx = array[indx]['attr'].findIndex((e) => name === e['name']);
 
-    if(attrIndx < 0) {
-      return this.setState(
-        {cartItemParams : [
-          ...array.slice(0,indx), {id: id, attr : [ 
-            ...attrArr,{name : name, param : param},...array.slice(indx + 1) 
-          ]}
-        ]}
-      );
-    }
-
-    return this.setState({ 
+    this.setState({ 
       cartItemParams : [
         ...array.slice(0,indx), {id: id, attr : [
           ...attrArr.slice(0,attrIndx), {name : name, param : param},...attrArr.slice(attrIndx + 1) 
@@ -95,12 +88,14 @@ class App extends React.Component {
         ...array.slice(indx + 1)
       ]}
     );
+    return
   }
 
   // sumps up current prices for all items in the cart
   calculateSum = () => {
-    let sum = this.state.prices.reduce((total,current,i) => total += current.price * this.state.cart[i]['num'], 0);
-    return sum
+    return this.state.prices.reduce((total,current,i) => 
+      total += current.price * this.state.cart[i]['num'], 0
+    );
   }
 
   symbolHandle(val) {
@@ -146,9 +141,14 @@ class App extends React.Component {
     this.setState({ cartItemNum : this.state.cartItemNum + operation });
   }
 
-  addToCart = productId => {
+  addToCart = (productId, attrName, attrVal) => {
     let cartArray = this.state.cart;
-    if(this.state.cart.some((e) => productId === e['id'])) {
+    let attrArr = this.state.cartItemParams;
+    
+    if(
+        cartArray.some((e) => productId === e['id']) && 
+        attrArr.some(e => e.id === productId && e.attr.every(el => el.name === attrName && el.param === attrVal))
+    ) {
       this.adjustCartItemNumber(productId, +1);
       return
     }
@@ -196,9 +196,10 @@ class App extends React.Component {
           <div className='main'>
             <div className='wrapper'>
               <Routes>
-                <Route path="/" element={<Category category = {this.state.category} appProps = {this}/>}/>
+                <Route path={'/:category'} exact element={<Category category = {this.state.category} appProps = {this}/>}/>
+                <Route path="/" label="all" element={<Category appProps = {this}/>}/>
                 <Route path="/cart" element={<Cart appProps = {this}/>} />
-                <Route path="/products/:productId" element={<Product appProps = {this}/>}/>
+                <Route path="/products/:productId" element={<Product appProps = {this} id = {this.state.productID}/>}/>
                 <Route path="/*" element={<Error/>} />
               </Routes>
             </div>

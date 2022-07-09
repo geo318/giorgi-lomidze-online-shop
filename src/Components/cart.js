@@ -41,6 +41,7 @@ export default class Cart extends Component {
             this.setState({loading: false});
             this.setState({cartNum : this.state.data.length });
         })
+
         this.setState({ render : false });
     }
 
@@ -81,9 +82,9 @@ export default class Cart extends Component {
                                             <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.adjustCartItemNumber(e['id'],-1); this.props.appProps.state.cart?.[i]?.['num'] > 0 && this.setState({render : true})}}/>
                                         </div>
                                         <div className="carousel">
-                                            <Link to = {`/products/${e.id}`} className='link' onClick={()=> {this.props.appProps.setProductId(e.id); this.props.appProps.close()}}>
-                                                <Carousel check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
-                                            </Link>
+                                            
+                                                <Carousel id = {e.id} click={this.props.appProps.setProductId} close = {this.props.close} check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
+                                           
                                         </div>
                                     </div>
                                 </div>

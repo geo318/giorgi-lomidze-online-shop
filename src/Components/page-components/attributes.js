@@ -12,16 +12,19 @@ export default class Attributes extends React.Component {
                             <span className="attr-name">{items['name']}:</span>
                             <ul className="flx">
                                 {
-                                    items['items'].map(i => (
-                                        <li className={ this.setActiveParam(i, params, elem, items) } 
-                                            onClick = { () => this.props.setItemParameters(elem['id'], items['name'], i['value'])} key = {i['id']} data-value={i['id'] }>
-                                            {
-                                                items.id === 'Color'
-                                                ? <div className="color-batch" style={ {backgroundColor : i['value']} }/>
-                                                : <div className="attr-txt">{i['value']}</div>
-                                            }
-                                        </li>
-                                    ))
+                                    items['items'].map(i => {
+                                        return (
+                                            <li className={ this.setActiveParam(i, params, elem, items) }
+                                                onClick = { () => elem.inStock && this.props.setItemParameters(elem['id'], items['name'], i['value'])} key = {i['id']} data-value={i['id'] }
+                                            >
+                                                {
+                                                    items.id === 'Color'
+                                                    ? <div className="color-batch" style={ {backgroundColor : i['value']} }/>
+                                                    : <div className="attr-txt">{i['value']}</div>
+                                                }
+                                            </li>
+                                        )
+                                    })
                                 }
                             </ul>
                         </div>

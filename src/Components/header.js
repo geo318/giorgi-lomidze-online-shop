@@ -121,7 +121,7 @@ class Header extends React.Component {
 
         const categoryMenu = this.state.categories
             ? this.state.categories.map((e, i) => (
-                <Link to = "/" className = { this.props.appProps.state.category === e['name'] ? 'cat act' : 'cat' } key = { i } id={ e['name']} onClick = {() => { this.props.appProps.categoryFilter(e['name']);} }>
+                <Link to = {`/${e['name']}`} className = { this.props.appProps.state.category === e['name'] ? 'cat act' : 'cat' } key = { i } id={ e['name']} onClick = {() => { this.props.appProps.categoryFilter(e['name']);} }>
                     <span>{ e['name'] }</span>
                 </Link>
             ))
@@ -151,7 +151,7 @@ class Header extends React.Component {
                                     }
                                     <div onClick={e => e.stopPropagation()} className='cart-dropdown' style = {this.state.cartDrop ? {display : 'block'}:{display : 'none'}}>
                                         { 
-                                            this.state.cartDrop && <Cart close = {this.close} check = {this.state.symbol} appProps = {this.props.appProps}/> 
+                                            this.state.cartDrop && <Cart close = {this.close} check appProps = {this.props.appProps}/> 
                                         }
                                     </div>
                                 </div>

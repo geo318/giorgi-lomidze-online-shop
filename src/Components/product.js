@@ -4,6 +4,7 @@ import { ProductDetailsQuery } from "../querries/querries";
 import Attributes from "./page-components/attributes";
 import Price from "./page-components/price";
 import Loading from "./page-components/loading";
+import Parser from 'html-react-parser';
 
 export default class Product extends React.Component {
     constructor(props) {
@@ -12,6 +13,13 @@ export default class Product extends React.Component {
             product : [],
             currentImg : 0
         }
+        this.fetchProduct = this.fetchProduct.bind(this);
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+        if(prevProps.id !== this.props.id) {
+            this.fetchProduct(this.props.id)
+        }
     }
     
     componentDidMount() {
@@ -19,9 +27,13 @@ export default class Product extends React.Component {
         this.props.appProps.state.productID
         ? this.props.appProps.state.productID 
         : JSON.parse(localStorage.getItem('app-state'))['productID'];
-
-        fetchQuery(ProductDetailsQuery, {product : productID}).then(data => this.setState({product : data}));
+        this.fetchProduct(productID)
+        
         this.setState({currentImg : 0});
+    }
+
+    fetchProduct(productID) {
+        fetchQuery(ProductDetailsQuery, {product : productID}).then(data => this.setState({product : data}));
     }
 
     addToCart() {
@@ -45,8 +57,8 @@ export default class Product extends React.Component {
                                 <div className="image-set flx">
                                     <div className="thumbnails flx flx-c">
                                         {
-                                            elem['gallery'].map((img,i) => {
-                                                return <div className = "thumb flx" onClick={()=> this.setState({currentImg : i})} key = {i}><img src={img} alt = ""/></div>
+                                            elem?.['gallery'].map((img,i) => {
+                                                return <div className = "thumb flx" onClick={()=> this.setState({currentImg : i})} key = {i}><img src={img ? img : "loading"} alt = ""/></div>
                                             })
                                         }
                                     </div>
@@ -64,9 +76,11 @@ export default class Product extends React.Component {
                                     <Price price = {elem} appProps = {this.props.appProps}/>
                                 </div>
                                 <div className="pr-buy">
-                                    <button className="footer-but order checkout" onClick = { ()=> this.addToCart() }>add to cart</button>
+                                    <button className="footer-but order checkout" onClick = { ()=> elem.inStock && this.addToCart() }>add to cart</button>
                                 </div>
-                                <div className="pr-footer-desc" dangerouslySetInnerHTML={{__html: elem['description']}}/>
+                                <div className="pr-footer-desc">
+                                    { Parser(elem['description']) }
+                                </div>
                             </div>
                         </div>
                     :   <Loading/>
