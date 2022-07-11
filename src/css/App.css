@@ -145,7 +145,7 @@ h2 {
   display: inline-block;
   padding-right: 10px;
 }
-
+.cur_line:hover,
 .active {
   background-color: #eee;
 }

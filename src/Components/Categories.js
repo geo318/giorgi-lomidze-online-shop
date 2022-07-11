@@ -87,10 +87,13 @@ class Category extends React.Component {
     async cardHover(id, amount) {
 
         await fetchQuery(ProductAttrQuery, {product : id}).then(data => {
-            let e = data.data?.product?.attributes[0];
-            this.props.appProps.addToCart(id,e['name'], e.items[0]['value']);
-            this.props.appProps.itemPrice(id, amount);
-            this.props.appProps.setItemParameters(id, e['name'], e.items[0]['value']);
+            let attributesArray = data.data?.product?.attributes;
+           // this.props.appProps.itemPrice(id, amount);
+            let attrDefArray= [];
+            attributesArray.forEach(e => {
+                attrDefArray.push({ name : e['name'], param : e.items[0]['value'] });
+            })
+            this.props.appProps.addToCart({id: id, operation: +1, price: amount, attrArray: attrDefArray});
         });
     }
 

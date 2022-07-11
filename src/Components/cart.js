@@ -22,9 +22,9 @@ export default class Cart extends Component {
         this.fetchCartItems();
     }
 
-    componentDidUpdate(prevProps,prevState,snapshot) {
+    componentDidUpdate(prevProps, prevState) {
         if(prevState.data.length !== this.state.data.length)
-            return localStorage.setItem('cart-data',JSON.stringify(this.state.data))
+            return localStorage.setItem('cart-data', JSON.stringify(this.state.data))
 
         if(this.state.render !== prevState.render)
             return this.fetchCartItems();
@@ -48,7 +48,7 @@ export default class Cart extends Component {
     render() {
        
         const cart = localStorage.getItem('cart-data')? JSON.parse(localStorage.getItem('cart-data')) : this.state.data;
-        const cartParams = this.props.appProps.state.cartItemParams;
+        const cartParams = this.props.appProps.state.cart;
         const cartItemNum = this.props.appProps.state.cartItemNum;
         const tax = 21; // % //
         return (
@@ -72,18 +72,18 @@ export default class Cart extends Component {
                                             <Price price = {e} appProps = {this.props.appProps}/>
                                         </div>
                                         <div className="attr">
-                                            <Attributes elem = {e} params = {cartParams} setItemParameters = {this.props.appProps.setItemParameters}/>
+                                            <Attributes elem = {e} index = {i} params = {cartParams} addToCart = {this.props.appProps.addToCart}/>
                                         </div>
                                     </div>
                                     <div className="rgt flx">
                                         <div className="cart-ctr flx flx-c">
-                                            <div className="plus flx flx-hc" onClick = {()=> {this.props.appProps.adjustCartItemNumber(e['id'],+1); }}/>
+                                            <div className="plus flx flx-hc" onClick = {()=> { this.props.appProps.addToCart({ id : e['id'], operation: +1, index: i, increment : true}); }}/>
                                             <div className="cart-num grow flx">{this.props.appProps.state.cart?.[i]?.['num']}</div>
-                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.adjustCartItemNumber(e['id'],-1); this.props.appProps.state.cart?.[i]?.['num'] > 0 && this.setState({render : true})}}/>
+                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.addToCart({ id : e['id'], operation: -1, index: i, increment : true}); this.props.appProps.state.cart?.[i]?.['num'] === 0 && this.setState({render : true})}}/>
                                         </div>
                                         <div className="carousel">
                                             
-                                                <Carousel id = {e.id} click={this.props.appProps.setProductId} close = {this.props.close} check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
+                                            <Carousel id = {e.id} click={this.props.appProps.setProductId} close = {this.props.close} check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
                                            
                                         </div>
                                     </div>
