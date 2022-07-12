@@ -23,8 +23,6 @@ export default class Cart extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        
-        console.log(this.props.appProps.state.cart)
         if(prevState.data.length !== this.state.data.length)
             return localStorage.setItem('cart-data', JSON.stringify(this.state.data))
 

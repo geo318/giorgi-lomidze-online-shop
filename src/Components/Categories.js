@@ -88,7 +88,6 @@ class Category extends React.Component {
 
         await fetchQuery(ProductAttrQuery, {product : id}).then(data => {
             let attributesArray = data.data?.product?.attributes;
-           // this.props.appProps.itemPrice(id, amount);
             let attrDefArray= [];
             attributesArray.forEach(e => {
                 attrDefArray.push({ name : e['name'], param : e.items[0]['value'] });
@@ -109,20 +108,20 @@ class Category extends React.Component {
                                 <div 
                                     key = {e['id']} 
                                     className = { `${!e.inStock ? "noStock" : ""} ${i % 3 === 0 ? "product_wrap no_padding" : "product_wrap"}`}
-                                    onMouseEnter = { ()=> this.setState({hoverId : e['id']})}
-                                    onMouseLeave = { ()=> this.setState({hoverId :null}) }
+                                    onMouseEnter = { ()=> this.setState({hoverId : e['id']}) }
+                                    onMouseLeave = { ()=> this.setState({hoverId : null}) }
                                 >
                                     
                                     <div className = "img_wrap">
                                         <Link to = {`/products/${e.id}`} className='link' onClick={()=> this.props.appProps.setProductId(e.id)}>
                                             <img src={e['gallery'][0]} alt={e['name']}/>
-                                            { 
+                                            {
                                                 !e.inStock && <div className="outOfStock flx">out of stock</div>
                                             }
                                         </Link>
                                         {
                                             e.inStock &&
-                                            <div className='hover_cart' onClick={() => this.cardHover(e['id'],e['prices'][this.props.appProps.switchCurrency(this.props.appProps.state.activeCurrency)]['amount'])}>
+                                            <div className='hover_cart' onClick={() => this.cardHover(e['id'], e['prices'])}>
                                                 { <CartSVG fill="#fff"/> }
                                             </div>
                                         }

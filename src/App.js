@@ -24,7 +24,6 @@ class App extends React.Component {
       symbol: '$', // displays an active currency symbol on navbar
     }
     this.symbolHandle = this.symbolHandle.bind(this);
-    //this.setItemParameters = this.setItemParameters.bind(this);
   }
 
   componentDidMount() {
@@ -34,38 +33,23 @@ class App extends React.Component {
     let localState = JSON.parse(localStorage.getItem('app-state'));
     if(localState) this.setState(localState);
     
-    this.setState({category : ""})
+    this.setState({ category : "" })
   }
 
   componentDidUpdate(prevProps, prevState) {
     localStorage.setItem('app-state', JSON.stringify(this.state));
 
     if(prevState.activeCurrency !== this.state.activeCurrency) {
-      console.log(this.state.cart)
-      let array = [];
-      this.state.cart.forEach((e)=> 
-        array.push(fetchQuery(ProductsPriceQuery, {product : e.id}))
-      );
-      /* 
-        to prevent data loss upon fetching a querry, 
-        data is stored in a helper array until the fetching process is complete
-      */
-      Promise.all(array).then(data => {
-        let updateCartItemPrice = this.state.cart;
-        data.forEach((el)=> {
-          updateCartItemPrice.forEach(e => e.price = el.data.product['prices'][this.switchCurrency(this.state.activeCurrency)]['amount']);
-        })
-        this.setState({cart : updateCartItemPrice});
-        this.calculateSum();
-      })
-      console.log(this.state.cart)
+      this.calculateSum();
     }
   }
 
   // sumps up current prices for all items in the cart
   calculateSum = () => {
-    return this.state.cart.reduce((total,current,i) => 
-      total += current.price * this.state.cart[i]['num'], 0
+    let priceArray = []
+    this.state.cart.forEach(e => priceArray.push({price: e.price[this.switchCurrency(this.state.activeCurrency)]['amount'], num: e.num  }))
+    return priceArray.reduce((total,current,i) => 
+      total += current.price * current.num, 0
     );
   }
 
@@ -84,7 +68,7 @@ class App extends React.Component {
 
   addToCart = params => {
     const {id, operation, price, attrArray, index, attrIndex, value} = params;
-console.log(price)
+    console.log(price)
     let cartArray = this.state.cart;
     let indx = cartArray.findIndex((e) => id === e.id);
 
