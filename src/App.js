@@ -41,6 +41,7 @@ class App extends React.Component {
     localStorage.setItem('app-state', JSON.stringify(this.state));
 
     if(prevState.activeCurrency !== this.state.activeCurrency) {
+      console.log(this.state.cart)
       let array = [];
       this.state.cart.forEach((e)=> 
         array.push(fetchQuery(ProductsPriceQuery, {product : e.id}))
@@ -50,15 +51,14 @@ class App extends React.Component {
         data is stored in a helper array until the fetching process is complete
       */
       Promise.all(array).then(data => {
-        this.setState({prices:[]});
-        let priceArr = [];
+        let updateCartItemPrice = this.state.cart;
         data.forEach((el)=> {
-          let e = el.data.product;
-          priceArr.push({id : e.id, price: e['prices'][this.switchCurrency(this.state.activeCurrency)]['amount']});
+          updateCartItemPrice.forEach(e => e.price = el.data.product['prices'][this.switchCurrency(this.state.activeCurrency)]['amount']);
         })
-        this.setState({prices : priceArr});
+        this.setState({cart : updateCartItemPrice});
         this.calculateSum();
       })
+      console.log(this.state.cart)
     }
   }
 
@@ -84,7 +84,7 @@ class App extends React.Component {
 
   addToCart = params => {
     const {id, operation, price, attrArray, index, attrIndex, value} = params;
-
+console.log(price)
     let cartArray = this.state.cart;
     let indx = cartArray.findIndex((e) => id === e.id);
 

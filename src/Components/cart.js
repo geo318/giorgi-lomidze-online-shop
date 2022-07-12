@@ -23,6 +23,8 @@ export default class Cart extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        
+        console.log(this.props.appProps.state.cart)
         if(prevState.data.length !== this.state.data.length)
             return localStorage.setItem('cart-data', JSON.stringify(this.state.data))
 
@@ -64,7 +66,7 @@ export default class Cart extends Component {
                             cart.map((el,i) => {
                             let e = el['data']['product']; 
                             return (                                
-                                <div key={e['id']} className='flx'>
+                                <div key={i} className='flx'>
                                     <div className="lft flx-c grow">
                                         <div className="name">{e['brand']}</div>
                                         <div className="sub">{e['name']}</div>
