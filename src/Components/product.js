@@ -1,7 +1,6 @@
 import React from "react";
 import fetchQuery from "../querries/fetchQuery";
 import { ProductDetailsQuery } from "../querries/querries";
-import Attributes from "./page-components/attributes";
 import Price from "./page-components/price";
 import Loading from "./page-components/loading";
 import Parser from 'html-react-parser';
@@ -11,18 +10,25 @@ export default class Product extends React.Component {
         super(props)
         this.state = {
             product : [],
-            currentImg : 0
+            currentImg : 0,
+            attributes: []
         }
         this.fetchProduct = this.fetchProduct.bind(this);
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if(prevProps.cartItemIndex !== this.props.cartItemIndex) {
+            if(this.props.appProps.state.attributesPassed.id !== this.props.appProps.state.productID) return
+            this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
+        }
+
         if(prevProps.id !== this.props.id) {
             this.fetchProduct(this.props.id)
         }
     }
-    
+
     componentDidMount() {
+        this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
         let productID =
         this.props.appProps.state.productID
         ? this.props.appProps.state.productID 
@@ -37,16 +43,22 @@ export default class Product extends React.Component {
     }
 
     addToCart() {
-        let cartParams = this.props.appProps.state.cartItemParams;
-        let index = cartParams.findIndex(e => e.id === this.props.appProps.state.productID);
 
-        if(index < 0 || cartParams[index]['attr'].length !== this.state.product['data']['product']['attributes'].length ) return
+        if(this.state.attributes.length !== this.state.product['data']['product']['attributes'].length ) return
 
-        this.props.appProps.addToCart(this.props.appProps.state.productID);
+        this.props.appProps.addToCart({ id: this.props.appProps.state.productID, operation: +1, price: this.state.product['data']['product']['prices'], attrArray: this.state.attributes });
+    }
+
+    setAttributes(name, param) {
+        let index = this.state.attributes.findIndex(e => e.name === name)
+        if(index < 0) {
+            this.setState({ attributes : [...this.state.attributes, {name : name, param : param} ] })
+            return
+        }
+        this.setState({ attributes : [...this.state.attributes.slice(0,index), {name : name, param : param},...this.state.attributes.slice(index + 1) ] })
     }
     
     render() {
-        const params = this.props.appProps.state.cartItemParams;
         const elem = this.state.product?.['data']?.['product'];
         return (
             <>
@@ -69,7 +81,36 @@ export default class Product extends React.Component {
                                 <div className="name">{elem['brand']}</div>
                                 <div className="sub">{elem['name']}</div>
                                 <div className="attr">
-                                    <Attributes elem = {elem} params = {params} setItemParameters = {this.props.appProps.setItemParameters}/>
+                                    {
+                                        elem['attributes'].map((items,index) => (                                                       
+                                            <div key = {index}>
+                                                <span className="attr-name">{items['name']}:</span>
+                                                <ul className="flx">
+                                                    {
+                                                        items['items'].map((i,indx) => {
+                                                            return (
+                                                                <li key={indx} 
+                                                                    className = { 
+                                                                        this.state.attributes[this.state.attributes?.findIndex(e => e.name === items.name)]?.param === i['value'] 
+                                                                        ? 'active-param' 
+                                                                        : null
+                                                                    }
+                                                                    onClick = { () => elem.inStock && this.setAttributes(items['name'], i['value']) }
+                                                                    data-value = { i['id'] }
+                                                                >
+                                                                    {
+                                                                        items.id === 'Color'
+                                                                        ? <div className="color-batch" style={ {backgroundColor : i['value']} }/>
+                                                                        : <div className="attr-txt">{ i['value'] }</div>
+                                                                    }
+                                                                </li>
+                                                            )
+                                                        })
+                                                    }
+                                                </ul>
+                                            </div>
+                                        ))
+                                    }
                                 </div>
                                 <div className="attr-name">price:</div>
                                 <div className="price">

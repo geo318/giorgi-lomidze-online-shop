@@ -5,8 +5,9 @@ import Category from './components/categories';
 import Cart from './components/cart';
 import Product from './components/product';
 import Error from './components/page-components/error';
-import fetchQuery from './querries/fetchQuery';
-import { ProductsPriceQuery } from './querries/querries';
+import Front from './components/page-components/front';
+// import fetchQuery from './querries/fetchQuery';
+// import { ProductsPriceQuery } from './querries/querries';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 class App extends React.Component {
@@ -20,6 +21,8 @@ class App extends React.Component {
       cart: [], // contains product id and number
       cartItemNum: 0,
       sumTotal : 0,
+      attributesPassed: [],
+      cartItemIndex: "",
       productID : null, // passing product page to fetch product
       symbol: '$', // displays an active currency symbol on navbar
     }
@@ -68,7 +71,7 @@ class App extends React.Component {
 
   addToCart = params => {
     const {id, operation, price, attrArray, index, attrIndex, value} = params;
-    console.log(price)
+
     let cartArray = this.state.cart;
     let indx = cartArray.findIndex((e) => id === e.id);
 
@@ -79,6 +82,7 @@ class App extends React.Component {
     if(params.increment) {
       let cartItemCopy = cartArray[index]
       cartItemCopy.num += operation
+
       if(cartItemCopy.num < 1) {
         this.setState({ cart : [...cartArray.slice(0, index),...cartArray.slice(index + 1)] })
         console.log(cartArray)
@@ -144,6 +148,14 @@ class App extends React.Component {
     this.setState({productID : id})
   }
 
+  setCartProps(cartArray, i, id) {
+    this.setState({ attributesPassed : {id: id, attr: cartArray[i]['attr']} })
+  }
+
+  setIndex(i) {
+    this.setState({cartItemIndex : i})
+  }
+
   render() {
     return (
       <>
@@ -151,12 +163,12 @@ class App extends React.Component {
         <Header appProps = {this} symbol = {this.state.symbol} activeCategory = {this.state.category}/>      
           <div className='main'>
             <div className='wrapper'>
-              <Routes>
+              <Routes>                
+                <Route path="/" element={<Front/>}/>
                 <Route path={'/:category'} exact element={<Category category = {this.state.category} appProps = {this}/>}/>
-                {/* <Route path="/" label="all" element={<Category appProps = {this}/>}/> */}
                 <Route path="/cart" element={<Cart appProps = {this}/>} />
-                <Route path="/products/:productId" element={<Product appProps = {this} id = {this.state.productID}/>}/>
-                {/* <Route path="/*" element={<Error/>} /> */}
+                <Route path="/products/:productId" element={<Product cartItemIndex = {this.state.cartItemIndex} attributesPassed = {this.state.attributesPassed} appProps = {this} id = {this.state.productID}/>}/>
+                <Route path="/*" element={<Error/>} />
               </Routes>
             </div>
           </div>

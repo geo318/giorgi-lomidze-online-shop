@@ -15,8 +15,10 @@ export default class Attributes extends React.Component {
                                     items['items'].map((i,indx) => {
                                         return (
                                             <li key={indx} className={ this.setActiveParam({cart: params, cartIndex : this.props.index, attrIndex : index, value : i['value']}) }
-                                                onClick = { () => elem.inStock && 
-                                                    this.props.addToCart({ id : elem['id'], attrArray: items['items'], name: items['name'], value : i['value'], attrIndex: index, index : this.props.index }) }
+                                                onClick = { () => 
+                                                    this.props.check == null &&
+                                                    this.props.addToCart({ id : elem['id'], attrArray: items['items'], name: items['name'], value : i['value'], attrIndex: index, index : this.props.index }) 
+                                                }
                                                     data-value={i['id'] }
                                             >
                                                 {

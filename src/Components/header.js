@@ -3,7 +3,7 @@ import fetchQuery from '../querries/fetchQuery';
 import logo from '../icons/logo.svg'
 import CartSVG from '../icons/cartSVG'
 import arrow from '../icons/arrow.svg'
-import {BrowserRouter as Router, Link} from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import Cart from './cart';
 import { categoriesQuery, currenciesQuery } from '../querries/querries';
 import Loading from './page-components/loading';
@@ -56,6 +56,7 @@ class Header extends React.Component {
         let timeout = setTimeout(()=> {
             this.setState({currencyDrop: {display: "block", visibility: "visible"}});
         },100);
+        
         if(this.state.currencyDrop.visibility === "visible")
         clearTimeout(timeout);
     }
@@ -79,8 +80,6 @@ class Header extends React.Component {
             this.props.appProps.detectNewContent("old");
         }, 300)
     }
-
-
 
     dropBag(e) {
         this.dropperHide()

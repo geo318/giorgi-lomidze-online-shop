@@ -1,7 +1,7 @@
 import React, {Component} from "react";
 import fetchQuery from '../querries/fetchQuery';
 import Carousel from "./page-components/carousel";
-import { BrowserRouter as Router, Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { ProductDetailsQuery } from "../querries/querries";
 import Attributes from "./page-components/attributes";
 import Price from "./page-components/price";
@@ -72,7 +72,7 @@ export default class Cart extends Component {
                                             <Price price = {e} appProps = {this.props.appProps}/>
                                         </div>
                                         <div className="attr">
-                                            <Attributes elem = {e} index = {i} params = {cartParams} addToCart = {this.props.appProps.addToCart}/>
+                                            <Attributes elem = {e} index = {i} params = {cartParams} addToCart = {this.props.appProps.addToCart} check = {this.props.check}/>
                                         </div>
                                     </div>
                                     <div className="rgt flx">
@@ -81,7 +81,7 @@ export default class Cart extends Component {
                                             <div className="cart-num grow flx">{this.props.appProps.state.cart?.[i]?.['num']}</div>
                                             <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.addToCart({ id : e['id'], operation: -1, index: i, increment : true}); this.props.appProps.state.cart?.[i]?.['num'] === 0 && this.setState({render : true})}}/>
                                         </div>
-                                        <div className="carousel">
+                                        <div className="carousel" onClick = {()=> {this.props.appProps.setCartProps(cartParams, i, e.id); this.props.appProps.setIndex(i);}}>
                                             
                                             <Carousel id = {e.id} click={this.props.appProps.setProductId} close = {this.props.close} check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
                                            
