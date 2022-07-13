@@ -6,8 +6,6 @@ import Cart from './components/cart';
 import Product from './components/product';
 import Error from './components/page-components/error';
 import Front from './components/page-components/front';
-// import fetchQuery from './querries/fetchQuery';
-// import { ProductsPriceQuery } from './querries/querries';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 
 class App extends React.Component {
