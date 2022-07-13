@@ -17,18 +17,19 @@ export default class Product extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
+        if(prevProps.id !== this.props.id) {
+            this.fetchProduct(this.props.id)
+        }
         if(prevProps.cartItemIndex !== this.props.cartItemIndex) {
             if(this.props.appProps.state.attributesPassed.id !== this.props.appProps.state.productID) return
             this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
         }
-
-        if(prevProps.id !== this.props.id) {
-            this.fetchProduct(this.props.id)
-        }
     }
 
     componentDidMount() {
-        this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
+        if(this.props.appProps.state.attributesPassed.attr) {
+            this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
+        }
         let productID =
         this.props.appProps.state.productID
         ? this.props.appProps.state.productID 

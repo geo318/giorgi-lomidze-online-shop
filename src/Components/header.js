@@ -56,12 +56,11 @@ class Header extends React.Component {
         this.setState({currencyDrop: {display: "block", visibility: "hidden"}})
         let timeout = setTimeout(()=> {
             this.setState({currencyDrop: {display: "block", visibility: "visible"}});
-        },100);
+        }, 100);
 
         if(this.state.currencyDrop.visibility === "visible")
         clearTimeout(timeout);
     }
-
 
     dropperHide(e) {
         if(this.state.currencyDrop.display === "none") return
@@ -96,6 +95,7 @@ class Header extends React.Component {
     }
 
     closeCartDropdown() {
+        this.hideScroll();
         if(!this.state.cartDrop) return
         this.setState({ cartDrop: false });
         document.removeEventListener("click", this.closeCartDropdown);

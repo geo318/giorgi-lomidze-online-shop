@@ -6,7 +6,7 @@ import Cart from './components/cart';
 import Product from './components/product';
 import Error from './components/page-components/error';
 import Front from './components/page-components/front';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 class App extends React.Component {
 
@@ -108,7 +108,7 @@ class App extends React.Component {
       this.setState({ cart : [...cartArray.slice(0, indx), { id: id, variant: similarItemsArray[indx].variant, price: price, num: similarItemsArray[indx].num + operation, attr : attrArray },...cartArray.slice(indx + 1)] })
       return
     }
-
+    console.log('it is')
     this.setState({ cart : [{ id: id, variant: similarItemsArray.length + 1, price: price, num: 1, attr : attrArray }, ...cartArray] })
     return
 
