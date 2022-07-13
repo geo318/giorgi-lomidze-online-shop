@@ -45,6 +45,9 @@ class Header extends React.Component {
         if(prevProps.symbol !== this.props.symbol){
             this.animate();
         }
+        if(prevState.cartDrop !== this.state.cartDrop) {
+            this.hideScroll();
+        }
     }
 
     dropper(e) {
@@ -82,8 +85,7 @@ class Header extends React.Component {
     }
 
     dropBag(e) {
-        this.dropperHide()
-
+        this.dropperHide();
         if(this.state.cartDrop) {
             document.querySelector('body').style.overflow = "hidden";
             this.closeCartDropdown();
@@ -95,14 +97,13 @@ class Header extends React.Component {
     }
 
     closeCartDropdown() {
-        this.hideScroll();
         if(!this.state.cartDrop) return
         this.setState({ cartDrop: false });
         document.removeEventListener("click", this.closeCartDropdown);
     }
 
     hideScroll() {
-        this.state.cartDrop ? document.querySelector('body').style.overflow = "auto" : document.querySelector('body').style.overflow = "hidden"
+        this.state.cartDrop ? document.querySelector('body').style.overflow = "hidden" : document.querySelector('body').style.overflow = "auto"
     }
 
     close() {
@@ -149,7 +150,7 @@ class Header extends React.Component {
                         </div>
                         <div className='right flx'>
                             <div className='flx flx-rr'>
-                                <div className='cart flx' onClick = {(e)=> {this.dropBag(e); this.hideScroll()} }>
+                                <div className='cart flx' onClick = {(e)=> {this.dropBag(e);} }>
                                     { this.props.appProps.state.cartItemNum > 0 && <span className = 'num'>{ this.props.appProps.state.cartItemNum }</span> }
                                     { 
                                         <CartSVG fill="#43464E"/> 
