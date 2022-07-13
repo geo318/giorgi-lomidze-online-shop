@@ -23,12 +23,13 @@ class Header extends React.Component {
         this.animate = this.animate.bind(this);
         this.dropBag = this.dropBag.bind(this);
         this.closeCartDropdown = this.closeCartDropdown.bind(this);
+        this.hideScroll = this.hideScroll.bind(this);
         this.close = this.close.bind(this);
     }
     
     componentDidMount() {
         
-        this.setState({cartDrop : false,currencyDrop : {display: "none",visibility: "hidden"}});
+        this.setState({cartDrop : false, currencyDrop : {display: "none",visibility: "hidden"}});
         document.querySelector('body').addEventListener('click', ()=> this.dropperHide());
 
         fetchQuery(categoriesQuery).then(data => {
@@ -56,7 +57,7 @@ class Header extends React.Component {
         let timeout = setTimeout(()=> {
             this.setState({currencyDrop: {display: "block", visibility: "visible"}});
         },100);
-        
+
         if(this.state.currencyDrop.visibility === "visible")
         clearTimeout(timeout);
     }
@@ -84,9 +85,10 @@ class Header extends React.Component {
     dropBag(e) {
         this.dropperHide()
 
-        if (this.state.cartDrop) {
-          this.closeCartDropdown();
-          return
+        if(this.state.cartDrop) {
+            document.querySelector('body').style.overflow = "hidden";
+            this.closeCartDropdown();
+            return
         }
         this.setState({ cartDrop: true });
         e.stopPropagation();
@@ -97,6 +99,10 @@ class Header extends React.Component {
         if(!this.state.cartDrop) return
         this.setState({ cartDrop: false });
         document.removeEventListener("click", this.closeCartDropdown);
+    }
+
+    hideScroll() {
+        this.state.cartDrop ? document.querySelector('body').style.overflow = "auto" : document.querySelector('body').style.overflow = "hidden"
     }
 
     close() {
@@ -143,7 +149,7 @@ class Header extends React.Component {
                         </div>
                         <div className='right flx'>
                             <div className='flx flx-rr'>
-                                <div className='cart flx' onClick = {(e)=> this.dropBag(e) }>
+                                <div className='cart flx' onClick = {(e)=> {this.dropBag(e); this.hideScroll()} }>
                                     { this.props.appProps.state.cartItemNum > 0 && <span className = 'num'>{ this.props.appProps.state.cartItemNum }</span> }
                                     { 
                                         <CartSVG fill="#43464E"/> 
