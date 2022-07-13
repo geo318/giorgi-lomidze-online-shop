@@ -104,11 +104,11 @@ class App extends React.Component {
     let similarItemsArray = cartArray.filter(e => e.id === id );
 
     if(similarItemsArray.some(e => e.attr.every((el, i) => el.name === attrArray[i]?.name && el.param === attrArray[i]?.param))) {
-      let indx = similarItemsArray.findIndex(e => e.attr.every((el, i) => el.name === attrArray[i].name && el.param === attrArray[i].param))
-      this.setState({ cart : [...cartArray.slice(0, indx), { id: id, variant: similarItemsArray[indx].variant, price: price, num: similarItemsArray[indx].num + operation, attr : attrArray },...cartArray.slice(indx + 1)] })
+      let indxSimilar = similarItemsArray.findIndex(e => e.attr.every((el, i) => el.name === attrArray[i].name && el.param === attrArray[i].param))
+      this.setState({ cart : [...cartArray.slice(0, indx), { id: id, variant: similarItemsArray[indxSimilar].variant, price: price, num: similarItemsArray[indxSimilar].num + operation, attr : attrArray },...cartArray.slice(indx + 1)] })
       return
     }
-    console.log('it is')
+
     this.setState({ cart : [{ id: id, variant: similarItemsArray.length + 1, price: price, num: 1, attr : attrArray }, ...cartArray] })
     return
 
