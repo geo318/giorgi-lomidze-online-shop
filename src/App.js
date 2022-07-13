@@ -85,7 +85,6 @@ class App extends React.Component {
 
       if(cartItemCopy.num < 1) {
         this.setState({ cart : [...cartArray.slice(0, index),...cartArray.slice(index + 1)] })
-        console.log(cartArray)
         return
       }
       this.setState({ cart : [...cartArray.slice(0, index), cartItemCopy,...cartArray.slice(index + 1)] })
