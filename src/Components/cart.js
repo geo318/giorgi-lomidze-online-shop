@@ -81,9 +81,9 @@ export default class Cart extends Component {
                                             <div className="cart-num grow flx">{this.props.appProps.state.cart?.[i]?.['num']}</div>
                                             <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.addToCart({ id : e['id'], operation: -1, index: i, increment : true}); this.props.appProps.state.cart?.[i]?.['num'] === 0 && this.setState({render : true})}}/>
                                         </div>
-                                        <div className="carousel" onClick = {()=> {this.props.appProps.setCartProps(cartParams, i, e.id); this.props.appProps.setIndex(i);}}>
+                                        <div className="carousel" onClick = {()=> {this.props.appProps.setCartProps(cartParams, i, e.id); this.props.appProps.setIndex(i); this.props.appProps.linkedFromCart(true)}}>
                                             
-                                            <Carousel id = {e.id} click={this.props.appProps.setProductId} close = {this.props.close} check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
+                                            <Carousel isCart = {this.props.appProps.state.linkedFromCart} setHistory = {this.props.appProps.setHistory} id = {e.id} click={this.props.appProps.setProductId} close = {this.props.close} check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
                                            
                                         </div>
                                     </div>
@@ -99,8 +99,8 @@ export default class Cart extends Component {
                     {
                         this.props.check && 
                         <div className="cart-dropdown-footer flx">
-                            <Link className = "footer-but" to = "/cart">
-                                <button className="order view-bag" onClick = { ()=>this.props.close() }>view bag</button>
+                            <Link className = "footer-but" to = "/cart" >
+                                <button className="order view-bag" onClick = { ()=> {this.props.close(); this.props.appProps.setHistory(`/cart`) }}>view bag</button>
                             </Link>
                             <button className="footer-but order checkout" onClick = { ()=>this.props.close() }>check out</button>
                         </div>

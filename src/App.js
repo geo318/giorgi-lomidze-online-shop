@@ -23,11 +23,16 @@ class App extends React.Component {
       cartItemIndex: "",
       productID : null, // passing product page to fetch product
       symbol: '$', // displays an active currency symbol on navbar
+      linkedFromCart : false,
+      history: [],
     }
     this.symbolHandle = this.symbolHandle.bind(this);
+    this.linkedFromCart = this.linkedFromCart.bind(this);
+    this.setHistory = this.setHistory.bind(this);
   }
 
   componentDidMount() {
+    this.setHistory('/')
     this.sumCartItems(this.state.cart);
     this.calculateSum();
     // using local storage to prevent data loss if page refreashed
@@ -38,6 +43,9 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
+    if(prevState.history.length !== this.state.history.length) {
+      console.log(this.state.history)
+    }
     localStorage.setItem('app-state', JSON.stringify(this.state));
 
     if(prevState.activeCurrency !== this.state.activeCurrency) {
@@ -153,7 +161,18 @@ class App extends React.Component {
     this.setState({cartItemIndex : i})
   }
 
+  linkedFromCart(bool) {
+    this.setState({ linkedFromCart : bool })
+  }
+
+  setHistory(page) {
+    this.setState({ history : [...this.state.history, page] })
+    return
+  }
+
   render() {
+    console.log(this.state.history)
+    console.log(window.history)
     return (
       <>
         <Router>
@@ -164,7 +183,7 @@ class App extends React.Component {
                 <Route path="/" element={<Front/>}/>
                 <Route path={'/:category'} exact element={<Category category = {this.state.category} appProps = {this}/>}/>
                 <Route path="/cart" element={<Cart appProps = {this}/>} />
-                <Route path="/products/:productId" element={<Product cartItemIndex = {this.state.cartItemIndex} attributesPassed = {this.state.attributesPassed} appProps = {this} id = {this.state.productID}/>}/>
+                <Route path="/products/:productId" element={<Product history = {this.state.history} linkedFromCart = {this.state.linkedFromCart} cartItemIndex = {this.state.cartItemIndex} attributesPassed = {this.state.attributesPassed} appProps = {this} id = {this.state.productID}/>}/>
                 <Route path="/*" element={<Error/>} />
               </Routes>
             </div>

@@ -91,6 +91,7 @@ class Header extends React.Component {
             this.closeCartDropdown();
             return
         }
+        this.props.appProps.setHistory('/dropdown-cart')
         this.setState({ cartDrop: true });
         e.stopPropagation();
         document.addEventListener("click", this.closeCartDropdown);
@@ -127,7 +128,7 @@ class Header extends React.Component {
 
         const categoryMenu = this.state.categories
             ? this.state.categories.map((e, i) => (
-                <Link to = {`/${e['name']}`} className = { this.props.appProps.state.category === e['name'] ? 'cat act' : 'cat' } key = { i } id={ e['name']} onClick = {() => { this.props.appProps.categoryFilter(e['name']);} }>
+                <Link to = {`/${e['name']}`} className = { this.props.appProps.state.category === e['name'] ? 'cat act' : 'cat' } key = { i } id={ e['name']} onClick = {() => { this.props.appProps.categoryFilter(e['name']);this.props.appProps.setHistory(`/${e['name']}`)} }>
                     <span>{ e['name'] }</span>
                 </Link>
             ))
@@ -150,7 +151,7 @@ class Header extends React.Component {
                         </div>
                         <div className='right flx'>
                             <div className='flx flx-rr'>
-                                <div className='cart flx' onClick = {(e)=> {this.dropBag(e);} }>
+                                <div className='cart flx' onClick = { (e)=> {this.dropBag(e)} }>
                                     { this.props.appProps.state.cartItemNum > 0 && <span className = 'num'>{ this.props.appProps.state.cartItemNum }</span> }
                                     { 
                                         <CartSVG fill="#43464E"/> 

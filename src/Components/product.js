@@ -11,7 +11,8 @@ export default class Product extends React.Component {
         this.state = {
             product : [],
             currentImg : 0,
-            attributes: []
+            attributes: [],
+            pageAddress: '/product'
         }
         this.fetchProduct = this.fetchProduct.bind(this);
     }
@@ -20,23 +21,27 @@ export default class Product extends React.Component {
         if(prevProps.id !== this.props.id) {
             this.fetchProduct(this.props.id)
         }
-        if(prevProps.cartItemIndex !== this.props.cartItemIndex) {
-            if(this.props.appProps.state.attributesPassed.id !== this.props.appProps.state.productID) return
-            this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
+        if(prevProps.history.length !== this.props.history.length) {
+            if(this.props.history[this.props.history.length-1] !== '/dropdown-cart')  {
+                this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
+                return
+            }
         }
     }
 
     componentDidMount() {
-        if(this.props.appProps.state.attributesPassed.attr) {
-            this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
-        }
+        this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
+                
         let productID =
         this.props.appProps.state.productID
         ? this.props.appProps.state.productID 
         : JSON.parse(localStorage.getItem('app-state'))['productID'];
         this.fetchProduct(productID)
-        
+    
         this.setState({currentImg : 0});
+        if(!this.props.linkedFromCart) {
+            this.setState({attributes:[]})
+        }
     }
 
     fetchProduct(productID) {
