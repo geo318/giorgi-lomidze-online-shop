@@ -38,8 +38,6 @@ class App extends React.Component {
     // using local storage to prevent data loss if page refreashed
     let localState = JSON.parse(localStorage.getItem('app-state'));
     if(localState) this.setState(localState);
-    
-    this.setState({ category : "" })
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -67,7 +65,7 @@ class App extends React.Component {
 
   addToCart = params => {
     const {id, price, attrArray, index, attrIndex, value, increment, decrement} = params;
-    
+
     let operation = decrement ? -1 : 1;
 
     let cartArray = this.state.cart;
@@ -169,7 +167,7 @@ class App extends React.Component {
           <div className='main'>
             <div className='wrapper'>
               <Routes>                
-                <Route path="/" element={<Front/>}/>
+                <Route path="/" element={<Front reset = {()=> this.setState({category: ''})}/>}/>
                 <Route path={'/:category'} element={<Category category = {this.state.category} appProps = {this}/>}/>
                 <Route path="/cart" element={<Cart render = {this.state.renderCart} appProps = {this} />} />
                 <Route path="/products/:productId" element={<Product history = {this.state.history} linkedFromCart = {this.state.linkedFromCart} cartItemIndex = {this.state.cartItemIndex} attributesPassed = {this.state.attributesPassed} appProps = {this} id = {this.state.productID}/>}/>

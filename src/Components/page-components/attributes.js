@@ -7,7 +7,7 @@ export default class Attributes extends React.Component {
         return (
             <>
                 {
-                    elem['attributes'].map((items,index) => (                                                       
+                    elem['attributes'].map((items,index) => (
                         <div key = {index}>
                             <span className="attr-name">{items['name']}:</span>
                             <ul className="flx">
@@ -15,12 +15,12 @@ export default class Attributes extends React.Component {
                                     items['items'].map((i,indx) => {
                                         return (
                                             <li key={indx} 
-                                            className = {
-                                                    this.setActiveParam({cart: params, cartIndex : this.props.index, attrIndex : index, value : i['value'], check : this.props.check, name: items.name})
+                                                className = {
+                                                    this.setActiveParam({cart: params, cartIndex: this.props.index, attrIndex: index, value: i['value'], check: this.props.check, name: items.name})
                                                 }
                                                 onClick = { () => 
                                                     this.props.check == null &&
-                                                    this.props.addToCart({ id : elem['id'], attrArray: items['items'], name: items['name'], value : i['value'], attrIndex: index, index : this.props.index }) 
+                                                    this.props.addToCart({ id: elem['id'], attrArray: items['items'], name: items['name'], value: i['value'], attrIndex: index, index: this.props.index }) 
                                                 }
                                                     data-value={i['id'] }
                                             >
