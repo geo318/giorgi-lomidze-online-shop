@@ -16,6 +16,7 @@ export default class Cart extends Component {
             render : false,
         }
         this.fetchCartItems = this.fetchCartItems.bind(this);
+        this.removeCartItems = this.removeCartItems.bind(this);
     }
 
     componentDidMount() {
@@ -23,14 +24,21 @@ export default class Cart extends Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-        if(prevState.data.length !== this.state.data.length)
-            return localStorage.setItem('cart-data', JSON.stringify(this.state.data))
+        if(prevState.data.length !== this.state.data.length) {
+            localStorage.setItem('cart-data', JSON.stringify(this.state.data))
+            this.fetchCartItems();
+        }
 
         if(this.state.render !== prevState.render)
             return this.fetchCartItems();
     }
 
-    fetchCartItems() {
+    removeCartItems(index) {
+        this.setState({ data : [...this.state.data.slice(0,index),...this.state.data.slice(index+1)] })
+    }
+
+    fetchCartItems(index) {
+        if(index) this.removeCartItems(index)
         let array = [];
         this.props.appProps.state.cart.forEach((e) => {
             array.push(fetchQuery(ProductDetailsQuery, { product : e['id'] }));
@@ -39,14 +47,12 @@ export default class Cart extends Component {
         Promise.all(array).then(data => {
             this.setState({data : data});
             this.setState({loading: false});
-            this.setState({cartNum : this.state.data.length });
         })
 
         this.setState({ render : false });
     }
 
     render() {
-       
         const cart = localStorage.getItem('cart-data')? JSON.parse(localStorage.getItem('cart-data')) : this.state.data;
         const cartParams = this.props.appProps.state.cart;
         const cartItemNum = this.props.appProps.state.cartItemNum;
@@ -79,7 +85,7 @@ export default class Cart extends Component {
                                         <div className="cart-ctr flx flx-c">
                                             <div className="plus flx flx-hc" onClick = {()=> { this.props.appProps.addToCart({ id : e['id'], operation: +1, index: i, increment : true}); }}/>
                                             <div className="cart-num grow flx">{this.props.appProps.state.cart?.[i]?.['num']}</div>
-                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.addToCart({ id : e['id'], operation: -1, index: i, increment : true}); this.props.appProps.state.cart?.[i]?.['num'] === 0 && this.setState({render : true})}}/>
+                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.addToCart({ id : e['id'], operation: -1, index: i, increment : true}); this.props.appProps.state.cart?.[i]?.['num'] === 0 && this.setState({render : true}) && this.fetchCartItems(i)}}/>
                                         </div>
                                         <div className="carousel" onClick = {()=> {this.props.appProps.setCartProps(cartParams, i, e.id); this.props.appProps.setIndex(i); this.props.appProps.linkedFromCart(true)}}>
                                             

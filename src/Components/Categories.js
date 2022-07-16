@@ -92,7 +92,7 @@ class Category extends React.Component {
             attributesArray.forEach(e => {
                 attrDefArray.push({ name : e['name'], param : e.items[0]['value'] });
             })
-            this.props.appProps.addToCart({id: id, operation: +1, price: amount, attrArray: attrDefArray});
+            this.props.appProps.addToCart({id: id, operation: 1, price: amount, attrArray: attrDefArray});
         });
     }
 

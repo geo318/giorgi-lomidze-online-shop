@@ -158,7 +158,7 @@ class Header extends React.Component {
                                     }
                                     <div onClick={e => e.stopPropagation()} className='cart-dropdown' style = {this.state.cartDrop ? {display : 'block'}:{display : 'none'}}>
                                         { 
-                                            this.state.cartDrop && <Cart close = {this.close} check appProps = {this.props.appProps}/> 
+                                            this.state.cartDrop && <Cart render = {this.props.appProps.state.renderCart} close = {this.close} check appProps = {this.props.appProps}/> 
                                         }
                                     </div>
                                 </div>

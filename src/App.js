@@ -25,6 +25,7 @@ class App extends React.Component {
       symbol: '$', // displays an active currency symbol on navbar
       linkedFromCart : false,
       history: [],
+      renderCart: false
     }
     this.symbolHandle = this.symbolHandle.bind(this);
     this.linkedFromCart = this.linkedFromCart.bind(this);
@@ -33,7 +34,6 @@ class App extends React.Component {
 
   componentDidMount() {
     this.setHistory('/')
-    this.sumCartItems(this.state.cart);
     this.calculateSum();
     // using local storage to prevent data loss if page refreashed
     let localState = JSON.parse(localStorage.getItem('app-state'));
@@ -43,9 +43,7 @@ class App extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if(prevState.history.length !== this.state.history.length) {
-      console.log(this.state.history)
-    }
+
     localStorage.setItem('app-state', JSON.stringify(this.state));
 
     if(prevState.activeCurrency !== this.state.activeCurrency) {
@@ -65,32 +63,27 @@ class App extends React.Component {
   symbolHandle(val) {
     this.setState({symbol : val});
   }
-
-  sumCartItems = (arr) => { 
-    let num = arr.reduce(
-      (total, curr) => { 
-        total += curr['num'] 
-        return total
-      }, 0);
-    this.setState( { cartItemNum : num } );
-  }
+  
 
   addToCart = params => {
     const {id, operation, price, attrArray, index, attrIndex, value} = params;
 
     let cartArray = this.state.cart;
     let indx = cartArray.findIndex((e) => id === e.id);
+    this.setState({cartItemNum: this.state.cartItemNum + operation});
 
-    if(operation != null) {
-      this.setState({cartItemNum: this.state.cartItemNum + operation});
+    if(indx < 0) {
+      this.setState({ cart : [{ id: id, price: price, num: operation, attr : attrArray },...cartArray] })
+      return
     }
-
+    
     if(params.increment) {
       let cartItemCopy = cartArray[index]
       cartItemCopy.num += operation
 
-      if(cartItemCopy.num < 1) {
+      if(cartItemCopy.num === 0) {
         this.setState({ cart : [...cartArray.slice(0, index),...cartArray.slice(index + 1)] })
+        this.setState({ renderCart : !this.state.renderCart })
         return
       }
       this.setState({ cart : [...cartArray.slice(0, index), cartItemCopy,...cartArray.slice(index + 1)] })
@@ -104,20 +97,15 @@ class App extends React.Component {
       return
     }
 
-    if(indx < 0) {
-      this.setState({ cart : [{ id: id, variant: 0, price: price, num: operation, attr : attrArray },...cartArray] })
-      return
-    }
-
     let similarItemsArray = cartArray.filter(e => e.id === id );
 
     if(similarItemsArray.some(e => e.attr.every((el, i) => el.name === attrArray[i]?.name && el.param === attrArray[i]?.param))) {
       let indxSimilar = similarItemsArray.findIndex(e => e.attr.every((el, i) => el.name === attrArray[i].name && el.param === attrArray[i].param))
-      this.setState({ cart : [...cartArray.slice(0, indx), { id: id, variant: similarItemsArray[indxSimilar].variant, price: price, num: similarItemsArray[indxSimilar].num + operation, attr : attrArray },...cartArray.slice(indx + 1)] })
+      this.setState({ cart : [{ id: id, price: price, num: similarItemsArray[indxSimilar].num + operation, attr : attrArray },...cartArray.slice(0, indx),...cartArray.slice(indx + 1)] })
       return
     }
 
-    this.setState({ cart : [{ id: id, variant: similarItemsArray.length + 1, price: price, num: 1, attr : attrArray }, ...cartArray] })
+    this.setState({ cart : [{ id: id, price: price, num: 1, attr : attrArray }, ...cartArray] })
     return
 
   }
@@ -171,8 +159,7 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state.history)
-    console.log(window.history)
+
     return (
       <>
         <Router>
@@ -181,8 +168,8 @@ class App extends React.Component {
             <div className='wrapper'>
               <Routes>                
                 <Route path="/" element={<Front/>}/>
-                <Route path={'/:category'} exact element={<Category category = {this.state.category} appProps = {this}/>}/>
-                <Route path="/cart" element={<Cart appProps = {this}/>} />
+                <Route path={'/:category'} element={<Category category = {this.state.category} appProps = {this}/>}/>
+                <Route path="/cart" element={<Cart render = {this.state.renderCart} appProps = {this} />} />
                 <Route path="/products/:productId" element={<Product history = {this.state.history} linkedFromCart = {this.state.linkedFromCart} cartItemIndex = {this.state.cartItemIndex} attributesPassed = {this.state.attributesPassed} appProps = {this} id = {this.state.productID}/>}/>
                 <Route path="/*" element={<Error/>} />
               </Routes>

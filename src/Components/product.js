@@ -12,7 +12,6 @@ export default class Product extends React.Component {
             product : [],
             currentImg : 0,
             attributes: [],
-            pageAddress: '/product'
         }
         this.fetchProduct = this.fetchProduct.bind(this);
     }
@@ -22,6 +21,7 @@ export default class Product extends React.Component {
             this.fetchProduct(this.props.id)
         }
         if(prevProps.history.length !== this.props.history.length) {
+            localStorage.setItem('product-attributes', JSON.stringify(this.state.attributes));
             if(this.props.history[this.props.history.length-1] !== '/dropdown-cart')  {
                 this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
                 return
@@ -31,7 +31,9 @@ export default class Product extends React.Component {
 
     componentDidMount() {
         this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
-                
+        let localState = JSON.parse(localStorage.getItem('product-attributes'));
+        if(localState) this.setState({attributes: localState});
+
         let productID =
         this.props.appProps.state.productID
         ? this.props.appProps.state.productID 
@@ -97,7 +99,7 @@ export default class Product extends React.Component {
                                                             return (
                                                                 <li key={indx} 
                                                                     className = { 
-                                                                        this.state.attributes[this.state.attributes?.findIndex(e => e.name === items.name)]?.param === i['value'] 
+                                                                        this.state.attributes?.[this.state.attributes?.findIndex(e => e.name === items.name)]?.param === i['value'] 
                                                                         ? 'active-param' 
                                                                         : null
                                                                     }
