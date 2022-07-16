@@ -83,9 +83,9 @@ export default class Cart extends Component {
                                     </div>
                                     <div className="rgt flx">
                                         <div className="cart-ctr flx flx-c">
-                                            <div className="plus flx flx-hc" onClick = {()=> { this.props.appProps.addToCart({ id : e['id'], operation: +1, index: i, increment : true}); }}/>
+                                            <div className="plus flx flx-hc" onClick = {()=> { this.props.appProps.addToCart({ id : e['id'], index: i, increment : true}); }}/>
                                             <div className="cart-num grow flx">{this.props.appProps.state.cart?.[i]?.['num']}</div>
-                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.addToCart({ id : e['id'], operation: -1, index: i, increment : true}); this.props.appProps.state.cart?.[i]?.['num'] === 0 && this.setState({render : true}) && this.fetchCartItems(i)}}/>
+                                            <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.addToCart({ id : e['id'], index: i, decrement : true}); this.props.appProps.state.cart?.[i]?.['num'] === 0 && this.setState({render : true}) && this.fetchCartItems(i)}}/>
                                         </div>
                                         <div className="carousel" onClick = {()=> {this.props.appProps.setCartProps(cartParams, i, e.id); this.props.appProps.setIndex(i); this.props.appProps.linkedFromCart(true)}}>
                                             

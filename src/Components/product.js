@@ -54,7 +54,7 @@ export default class Product extends React.Component {
 
         if(this.state.attributes.length !== this.state.product['data']['product']['attributes'].length ) return
 
-        this.props.appProps.addToCart({ id: this.props.appProps.state.productID, operation: +1, price: this.state.product['data']['product']['prices'], attrArray: this.state.attributes });
+        this.props.appProps.addToCart({ id: this.props.appProps.state.productID, price: this.state.product['data']['product']['prices'], attrArray: this.state.attributes });
     }
 
     setAttributes(name, param) {

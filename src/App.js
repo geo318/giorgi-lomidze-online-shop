@@ -66,7 +66,9 @@ class App extends React.Component {
   
 
   addToCart = params => {
-    const {id, operation, price, attrArray, index, attrIndex, value} = params;
+    const {id, price, attrArray, index, attrIndex, value, increment, decrement} = params;
+    
+    let operation = decrement ? -1 : 1;
 
     let cartArray = this.state.cart;
     let indx = cartArray.findIndex((e) => id === e.id);
@@ -77,9 +79,9 @@ class App extends React.Component {
       return
     }
     
-    if(params.increment) {
+    if(increment || decrement) {
       let cartItemCopy = cartArray[index]
-      cartItemCopy.num += operation
+      cartItemCopy.num += operation;
 
       if(cartItemCopy.num === 0) {
         this.setState({ cart : [...cartArray.slice(0, index),...cartArray.slice(index + 1)] })
