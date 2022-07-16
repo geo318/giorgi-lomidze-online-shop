@@ -64,13 +64,13 @@ class App extends React.Component {
   
 
   addToCart = params => {
-    const {id, price, attrArray, index, attrIndex, value, increment, decrement} = params;
+    const {id, price, attrArray, index, attrIndex, value, increment, decrement, changeParam} = params;
 
     let operation = decrement ? -1 : 1;
 
     let cartArray = this.state.cart;
     let indx = cartArray.findIndex((e) => id === e.id);
-    this.setState({cartItemNum: this.state.cartItemNum + operation});
+    !changeParam && this.setState({cartItemNum: this.state.cartItemNum + operation});
 
     if(indx < 0) {
       this.setState({ cart : [{ id: id, price: price, num: operation, attr : attrArray },...cartArray] })
@@ -90,7 +90,7 @@ class App extends React.Component {
       return
     }
 
-    if(price == null) {
+    if(changeParam) {
       let cartItemCopy = cartArray[index]
       cartItemCopy.attr[attrIndex].param = value
       this.setState({ cart : [...cartArray.slice(0, index), cartItemCopy,...cartArray.slice(index + 1)] })

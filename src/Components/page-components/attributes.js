@@ -20,7 +20,7 @@ export default class Attributes extends React.Component {
                                                 }
                                                 onClick = { () => 
                                                     this.props.check == null &&
-                                                    this.props.addToCart({ id: elem['id'], attrArray: items['items'], name: items['name'], value: i['value'], attrIndex: index, index: this.props.index }) 
+                                                    this.props.addToCart({ id: elem['id'], attrArray: items['items'], name: items['name'], value: i['value'], attrIndex: index, index: this.props.index, changeParam: true }) 
                                                 }
                                                     data-value={i['id'] }
                                             >
