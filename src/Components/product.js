@@ -20,7 +20,8 @@ export default class Product extends React.Component {
         if(prevProps.id !== this.props.id) {
             this.fetchProduct(this.props.id)
         }
-        if(prevProps.history.length !== this.props.history.length) {
+        if(prevProps.history.length !== this.props.history.length) {   
+            this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
             localStorage.setItem('product-attributes', JSON.stringify(this.state.attributes));
             if(this.props.history[this.props.history.length-1] !== '/dropdown-cart')  {
                 this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
@@ -30,7 +31,6 @@ export default class Product extends React.Component {
     }
 
     componentDidMount() {
-        this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
         let localState = JSON.parse(localStorage.getItem('product-attributes'));
         if(localState) this.setState({attributes: localState});
 
@@ -51,8 +51,8 @@ export default class Product extends React.Component {
     }
 
     addToCart() {
-
-        if(this.state.attributes.length !== this.state.product['data']['product']['attributes'].length ) return
+        //this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
+        if(this.state.attributes.length !== this.state.product['data']['product']['attributes'].length) return
 
         this.props.appProps.addToCart({ id: this.props.appProps.state.productID, price: this.state.product['data']['product']['prices'], attrArray: this.state.attributes });
     }

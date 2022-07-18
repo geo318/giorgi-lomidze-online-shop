@@ -97,6 +97,7 @@ class Category extends React.Component {
     }
 
     render() {
+        
         return (
             <> 
                 <h2 className='g_h2'>{ this.props.appProps.state.category }</h2>
