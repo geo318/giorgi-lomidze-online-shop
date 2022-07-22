@@ -228,6 +228,7 @@ img {
 }
 .outOfStock {
   position: absolute;
+  pointer-events: none;
   z-index: 1;
   inset: 0;
   justify-content: center;

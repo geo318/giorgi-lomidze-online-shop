@@ -83,11 +83,17 @@ export default class Product extends React.Component {
                                         }
                                     </div>
                                     <img  className="active-image" src={elem['gallery'][this.state.currentImg]} alt={`${elem['brand']} ${elem['name']}`}/>
+                                    {
+                                        !elem.inStock && <div className="outOfStock flx">out of stock</div>
+                                    }
                                 </div>
                             </div>
                             <div className="lft flx-c pr-desc">
                                 <div className="name">{elem['brand']}</div>
                                 <div className="sub">{elem['name']}</div>
+                                {
+                                    !elem.inStock && <div className="attr">Out of stock</div>
+                                }
                                 <div className="attr">
                                     {
                                         elem['attributes'].map((items,index) => (                                                       

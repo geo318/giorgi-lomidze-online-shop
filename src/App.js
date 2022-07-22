@@ -171,6 +171,7 @@ class App extends React.Component {
                 <Route exact path="/categories/:category" element={<Category category = {this.state.category} appProps = {this}/>}/>
                 <Route exact path="/cart" element={<Cart render = {this.state.renderCart} appProps = {this} />} />
                 <Route exact path="/products/:productId" element={<Product history = {this.state.history} linkedFromCart = {this.state.linkedFromCart} cartItemIndex = {this.state.cartItemIndex} attributesPassed = {this.state.attributesPassed} appProps = {this} id = {this.state.productID}/>}/>
+                <Route path="/*" element={<Error/>} />
               </Routes>
             </div>
           </div>
