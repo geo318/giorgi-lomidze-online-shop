@@ -27,21 +27,17 @@ class Header extends React.Component {
         this.close = this.close.bind(this);
     }
     
-    componentDidMount() {
+    async componentDidMount() {
         
         this.setState({cartDrop : false, currencyDrop : {display: "none",visibility: "hidden"}});
         document.querySelector('body').addEventListener('click', ()=> this.dropperHide());
 
-        fetchQuery(categoriesQuery).then(data => {
+        await fetchQuery(categoriesQuery).then(data => {
             this.setState( {categories : data['data']['categories']} );
-        })
-
-        fetchQuery(currenciesQuery).then(data => {
-            this.setState( {currencies : data['data']['currencies']} );
         })
     }
 
-    componentDidUpdate(prevProps, prevState) {       
+    async componentDidUpdate(prevProps, prevState) {       
         if(prevProps.symbol !== this.props.symbol){
             this.animate();
         }
@@ -51,6 +47,11 @@ class Header extends React.Component {
     }
 
     dropper(e) {
+        if(this.state.currencies.length === 0) {
+            fetchQuery(currenciesQuery).then(data => {
+                this.setState( {currencies : data['data']['currencies']} );
+            })
+        }
         this.closeCartDropdown()
         if(this.state.currencyDrop.display === "block") {
             return this.dropperHide(e)
@@ -128,7 +129,7 @@ class Header extends React.Component {
 
         const categoryMenu = this.state.categories
             ? this.state.categories.map((e, i) => (
-                <Link to = {`/${e['name']}`} className = { this.props.appProps.state.category === e['name'] ? 'cat act' : 'cat' } key = { i } id={ e['name']} onClick = {() => { this.props.appProps.categoryFilter(e['name']);this.props.appProps.setHistory(`/${e['name']}`)} }>
+                <Link to = {`/categories/${e['name']}`} className = { this.props.appProps.state.category === e['name'] ? 'cat act' : 'cat' } key = { i } id={ e['name']} onClick = {() => { this.props.appProps.categoryFilter(e['name']);this.props.appProps.setHistory(`/${e['name']}`)} }>
                     <span>{ e['name'] }</span>
                 </Link>
             ))

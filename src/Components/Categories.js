@@ -50,13 +50,10 @@ class Category extends React.Component {
             this.setState({loading : true});
             const resultData = data['data']['category']['products'];
             
-            // to mimic loading data from server
-            setTimeout(() => {
-                this.setState({ dataLength : resultData.length });
-                this.setState({ data : resultData.slice(0, this.state.page) });
+            this.setState({ dataLength : resultData.length });
+            this.setState({ data : resultData.slice(0, this.state.page) });
                 
             this.setState({ loading : false });
-            }, 350);
         })
     }
 
@@ -97,7 +94,7 @@ class Category extends React.Component {
     }
 
     render() {
-        
+
         return (
             <> 
                 <h2 className='g_h2'>{ this.props.appProps.state.category }</h2>

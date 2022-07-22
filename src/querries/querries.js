@@ -88,9 +88,6 @@ const categoriesQuery = `
     query {
         categories {
             name
-            products {
-                id
-            }
         }
     }
 `;
