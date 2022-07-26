@@ -548,7 +548,7 @@ li:hover {
   z-index: 3;
   top:50px;
   padding: 32px 16px;
-  width: 325px;
+  width: 330px;
   max-height: 677px;
   right: -30px;
   overflow: hidden;
@@ -668,6 +668,7 @@ li:hover {
 .cart-dropdown
 .lft {
   min-height: 190px;
+  max-width: 128px;
 }
 .cart-dropdown
 .carousel img {

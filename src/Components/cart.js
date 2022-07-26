@@ -27,7 +27,10 @@ export default class Cart extends Component {
         if(prevState.data.length !== this.state.data.length) {
             localStorage.setItem('cart-data', JSON.stringify(this.state.data))
             this.fetchCartItems();
+            return
         }
+        if(prevProps.num !== this.props.num)
+            return this.fetchCartItems();
 
         if(this.state.render !== prevState.render)
             return this.fetchCartItems();

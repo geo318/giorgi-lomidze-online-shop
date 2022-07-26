@@ -159,8 +159,9 @@ class App extends React.Component {
   }
 
   render() {
-
+console.log(this.state.attributesPassed,'app')
     return (
+      
       <>
         <Router>
         <Header appProps = {this} symbol = {this.state.symbol} activeCategory = {this.state.category}/>      
@@ -169,7 +170,7 @@ class App extends React.Component {
               <Routes>                
                 <Route exact path="/" element={<Front reset = {()=> this.setState({category: ''})} history = {this.state.history} />}/>
                 <Route exact path="/categories/:category" element={<Category category = {this.state.category} appProps = {this}/>}/>
-                <Route exact path="/cart" element={<Cart render = {this.state.renderCart} appProps = {this} />} />
+                <Route exact path="/cart" element={<Cart num = {this.state.cartItemNum} render = {this.state.renderCart} appProps = {this} />} />
                 <Route exact path="/products/:productId" element={<Product history = {this.state.history} linkedFromCart = {this.state.linkedFromCart} cartItemIndex = {this.state.cartItemIndex} attributesPassed = {this.state.attributesPassed} appProps = {this} id = {this.state.productID}/>}/>
                 <Route path="/*" element={<Error/>} />
               </Routes>

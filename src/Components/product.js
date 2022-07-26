@@ -19,20 +19,17 @@ export default class Product extends React.Component {
     componentDidUpdate(prevProps, prevState) {
         if(prevProps.id !== this.props.id) {
             this.fetchProduct(this.props.id)
+            this.props.linkedFromCart && this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
         }
         if(prevProps.history.length !== this.props.history.length) {   
-            this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
+            this.props.linkedFromCart && this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
             localStorage.setItem('product-attributes', JSON.stringify(this.state.attributes));
-            if(this.props.history[this.props.history.length-1] !== '/dropdown-cart')  {
-                this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
-                return
-            }
         }
     }
 
     componentDidMount() {
         let localState = JSON.parse(localStorage.getItem('product-attributes'));
-        if(localState) this.setState({attributes: localState});
+        if(localState && this.props.linkedFromCart) this.setState({attributes: localState});
 
         let productID =
         this.props.appProps.state.productID
@@ -51,7 +48,6 @@ export default class Product extends React.Component {
     }
 
     addToCart() {
-        //this.setState({ attributes : this.props.appProps.state.attributesPassed.attr })
         if(this.state.attributes.length !== this.state.product['data']['product']['attributes'].length) return
 
         this.props.appProps.addToCart({ id: this.props.appProps.state.productID, price: this.state.product['data']['product']['prices'], attrArray: this.state.attributes });
@@ -67,6 +63,7 @@ export default class Product extends React.Component {
     }
     
     render() {
+        console.log(this.state.attributes)
         const elem = this.state.product?.['data']?.['product'];
         return (
             <>
