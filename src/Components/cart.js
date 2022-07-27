@@ -29,15 +29,14 @@ export default class Cart extends Component {
             this.fetchCartItems();
             return
         }
-        if(prevProps.num !== this.props.num)
-            return this.fetchCartItems();
-
-        if(this.state.render !== prevState.render)
+        if(prevProps.num !== this.props.num || this.state.render !== prevState.render)
             return this.fetchCartItems();
     }
 
+
     removeCartItems(index) {
-        this.setState({ data : [...this.state.data.slice(0,index),...this.state.data.slice(index+1)] })
+        this.setState({ data : [...this.state.data.slice(0, 
+            index),...this.state.data.slice(index + 1)] })
     }
 
     fetchCartItems(index) {
@@ -60,8 +59,9 @@ export default class Cart extends Component {
         const cartParams = this.props.appProps.state.cart;
         const cartItemNum = this.props.appProps.state.cartItemNum;
         const tax = 21; // % //
+
         return (
-            <>  
+            <>
                 { this.props.check == null && <h3 className="cart_header">cart</h3> }
                 { this.props.check && <div className="cart-drop-header"><span>My Bag,</span><span>{` ${cartItemNum} item${cartItemNum > 1 ? 's' : ""}`}</span></div> }
                 <div className="cart_products">
@@ -90,7 +90,7 @@ export default class Cart extends Component {
                                             <div className="cart-num grow flx">{this.props.appProps.state.cart?.[i]?.['num']}</div>
                                             <div className="minus flx flx-hc" onClick = {()=> {this.props.appProps.addToCart({ id : e['id'], index: i, decrement : true}); this.props.appProps.state.cart?.[i]?.['num'] === 0 && this.setState({render : true}) && this.fetchCartItems(i)}}/>
                                         </div>
-                                        <div className="carousel" onClick = {()=> {this.props.appProps.setCartProps(cartParams, i, e.id); this.props.appProps.setIndex(i); this.props.appProps.linkedFromCart(true)}}>
+                                        <div className="carousel" onClick = {()=> {this.props.appProps.setCartProps(cartParams, i, e.id); this.props.appProps.setIndex(i); this.props.appProps.linkedFromCart(true);this.props.appProps.setHistory(`/products/${e.id}`) }}>
                                             
                                             <Carousel isCart = {this.props.appProps.state.linkedFromCart} setHistory = {this.props.appProps.setHistory} id = {e.id} click={this.props.appProps.setProductId} close = {this.props.close} check = {this.props.check} array = {e['gallery']} alt={`${e['brand']} ${e['name']}`}/>
                                            
@@ -109,7 +109,7 @@ export default class Cart extends Component {
                         this.props.check && 
                         <div className="cart-dropdown-footer flx">
                             <Link className = "footer-but" to = "/cart" >
-                                <button className="order view-bag" onClick = { ()=> {this.props.close(); this.props.appProps.setHistory(`/cart`) }}>view bag</button>
+                                <button className="order view-bag" onClick = { ()=> {this.props.close(); this.props.appProps.setHistory('/cart') }}>view bag</button>
                             </Link>
                             <button className="footer-but order checkout" onClick = { ()=>this.props.close() }>check out</button>
                         </div>

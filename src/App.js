@@ -142,6 +142,7 @@ class App extends React.Component {
   }
 
   setCartProps(cartArray, i, id) {
+    if(cartArray.length === 0) return this.setState({ attributesPassed : [] })
     this.setState({ attributesPassed : {id: id, attr: cartArray[i]['attr']} })
   }
 
@@ -159,9 +160,7 @@ class App extends React.Component {
   }
 
   render() {
-console.log(this.state.attributesPassed,'app')
     return (
-      
       <>
         <Router>
         <Header appProps = {this} symbol = {this.state.symbol} activeCategory = {this.state.category}/>      

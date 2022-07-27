@@ -111,7 +111,7 @@ class Category extends React.Component {
                                 >
                                     
                                     <div className = "img_wrap">
-                                        <Link to = {`/products/${e.id}`} className='link' onClick={()=> {this.props.appProps.setProductId(e.id); this.props.appProps.setHistory(`/products/${e.id}`); this.props.appProps.linkedFromCart(false)}}>
+                                        <Link to = {`/products/${e.id}`} className='link' onClick={()=> {this.props.appProps.setProductId(e.id); this.props.appProps.setCartProps([]);this.props.appProps.setHistory(`/products/${e.id}`); this.props.appProps.linkedFromCart(false)}}>
                                             <img src={e['gallery'][0]} alt={e['name']}/>
                                             {
                                                 !e.inStock && <div className="outOfStock flx">out of stock</div>

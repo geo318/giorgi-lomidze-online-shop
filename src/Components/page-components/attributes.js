@@ -45,8 +45,7 @@ export default class Attributes extends React.Component {
 
     setActiveParam(params) {
         const {cart, cartIndex, attrIndex, value} = params;
-
-        return cart[cartIndex].attr[attrIndex].param === value 
+        return cart[cartIndex]?.attr[attrIndex]?.param === value 
         ? 'active-param' 
         : null                                        
     }

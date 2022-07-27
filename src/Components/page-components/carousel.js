@@ -22,7 +22,7 @@ export default class Carousel extends React.Component {
                     </div>
                 }
                 <div className="img-wrap flx">
-                    <Link to = {`/products/${this.props.id}`} className='link' onClick={ ()=> { this.props.click(this.props.id); this.props.check && this.props.close(); this.props.setHistory(`/products/${this.props.id}`)} }>
+                    <Link to = {`/products/${this.props.id}`} className='link' onClick={ () => { this.props.click(this.props.id);this.props.check && this.props.close(); } }>
                         <img src = {array[current]} alt={this.props.alt}/>
                     </Link>
                 </div>
