@@ -97,11 +97,11 @@ class App extends React.Component {
       return
     }
 
-    let similarItemsArray = cartArray.filter(e => e.id === id );
-
-    if(similarItemsArray.some(e => e.attr.every((el, i) => el.name === attrArray[i]?.name && el.param === attrArray[i]?.param))) {
-      let indxSimilar = similarItemsArray.findIndex(e => e.attr.every((el, i) => el.name === attrArray[i].name && el.param === attrArray[i].param))
-      this.setState({ cart : [{ id: id, price: price, num: similarItemsArray[indxSimilar].num + operation, attr : attrArray },...cartArray.slice(0, indx),...cartArray.slice(indx + 1)] })
+    if(cartArray.filter(e => e.id === id ).some(el => el.attr.every((attr,i) => attr.param === attrArray[i].param))) {
+      let itemIndex = cartArray.findIndex(e => e.id === id && e.attr.every((el, i) => el.name === attrArray[i].name && el.param === attrArray[i].param))
+      let cartItemCopy = cartArray[itemIndex];
+      cartItemCopy.num += operation;
+      this.setState({ cart : [cartItemCopy,...cartArray.slice(0, itemIndex),...cartArray.slice(itemIndex + 1)] })
       return
     }
 
@@ -170,7 +170,7 @@ class App extends React.Component {
                 <Route exact path="/" element={<Front reset = {()=> this.setState({category: ''})} history = {this.state.history} />}/>
                 <Route exact path="/categories/:category" element={<Category category = {this.state.category} appProps = {this}/>}/>
                 <Route exact path="/cart" element={<Cart num = {this.state.cartItemNum} render = {this.state.renderCart} appProps = {this} />} />
-                <Route exact path="/products/:productId" element={<Product history = {this.state.history} linkedFromCart = {this.state.linkedFromCart} cartItemIndex = {this.state.cartItemIndex} attributesPassed = {this.state.attributesPassed} appProps = {this} id = {this.state.productID}/>}/>
+                <Route path="/products/:productId" element={<Product history = {this.state.history} linkedFromCart = {this.state.linkedFromCart} cartItemIndex = {this.state.cartItemIndex} attributesPassed = {this.state.attributesPassed} appProps = {this} id = {this.state.productID}/>}/>
                 <Route path="/*" element={<Error/>} />
               </Routes>
             </div>

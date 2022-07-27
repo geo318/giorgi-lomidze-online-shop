@@ -29,7 +29,7 @@ class Header extends React.Component {
     
     async componentDidMount() {
         
-        this.setState({cartDrop : false, currencyDrop : {display: "none",visibility: "hidden"}});
+        this.setState({cartDrop : false, currencyDrop : {display: "none", visibility: "hidden"}});
         document.querySelector('body').addEventListener('click', ()=> this.dropperHide());
 
         await fetchQuery(categoriesQuery).then(data => {

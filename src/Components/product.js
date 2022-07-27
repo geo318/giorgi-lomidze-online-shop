@@ -37,9 +37,9 @@ export default class Product extends React.Component {
         let productID =
         this.props.appProps.state.productID
         ? this.props.appProps.state.productID 
-        : JSON.parse(localStorage.getItem('app-state'))['productID'];
+        : JSON.parse(localStorage.getItem('app-state'))?.['productID'];
+
         this.fetchProduct(productID)
-    
         this.setState({currentImg : 0});
     }
 
