@@ -8,7 +8,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 1. ### `yarn build`
 2. ### `yarn start`
   
-## In the Project Directory run commands: 
+## In the project Directory run commands: 
 1. ### `npm install` (to install all dependences) 
 2. run command `npm start`
 
