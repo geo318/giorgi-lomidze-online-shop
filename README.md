@@ -1,10 +1,16 @@
-# Getting Started with Create React App
+# Project <<online shop>>
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Available Scripts
+## Download the project along with the server [Server GitHub Link](https://github.com/scandiweb/junior-react-endpoint) and clone them seperately in one folder
 
-In the project directory, you can run:
+- In the server Directory run commands:
+-- ### `yarn build`
+-- ### `yarn start`
+  
+- In the Project Directory run commands: 
+-- ### `npm install` (to install all dependences) 
+-- run command ### `npm start`
 
 ### `npm start`
 
