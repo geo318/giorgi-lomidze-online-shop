@@ -1,6 +1,6 @@
 import React from "react";
-import fetchQuery from "../querries/fetchQuery";
-import { ProductDetailsQuery } from "../querries/querries";
+import fetchQuery from "../queries/fetchQuery";
+import { ProductDetailsQuery } from "../queries/queries";
 import Price from "./page-components/price";
 import Loading from "./page-components/loading";
 import Parser from 'html-react-parser';
@@ -17,7 +17,6 @@ export default class Product extends React.Component {
     }
 
     componentDidUpdate(prevProps, prevState) {
-    
         if(prevProps.id !== this.props.id) {
             this.fetchProduct(this.props.id)
         }
@@ -79,7 +78,11 @@ export default class Product extends React.Component {
                                     <div className="thumbnails flx flx-c">
                                         {
                                             elem?.['gallery'].map((img,i) => {
-                                                return <div className = "thumb flx" onClick={()=> this.setState({currentImg : i})} key = {i}><img src={img ? img : "loading"} alt = ""/></div>
+                                                return (
+                                                    <div className = "thumb flx" onClick={()=> this.setState({currentImg : i})} key = {i}>
+                                                        <img src={img ? img : "loading"} alt = ""/>
+                                                    </div>
+                                                )
                                             })
                                         }
                                     </div>

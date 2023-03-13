@@ -1,11 +1,11 @@
 import React from 'react';
-import fetchQuery from '../querries/fetchQuery';
+import fetchQuery from '../queries/fetchQuery';
 import CartSVG from '../icons/cartSVG';
 import { Link } from 'react-router-dom'
-import { ProductsQuery } from '../querries/querries';
+import { ProductsQuery } from '../queries/queries';
 import Price from './page-components/price';
 import Loading from './page-components/loading';
-import { ProductAttrQuery } from '../querries/querries';
+import { ProductAttrQuery } from '../queries/queries';
 
 class Category extends React.Component {
     constructor(props) {
@@ -94,7 +94,6 @@ class Category extends React.Component {
     }
 
     render() {
-
         return (
             <> 
                 <h2 className='g_h2'>{ this.props.appProps.state.category }</h2>
@@ -139,7 +138,6 @@ class Category extends React.Component {
                     this.state.loading && 
                     <Loading/>
                 }
-
             </>
         )
     }

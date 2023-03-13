@@ -1,15 +1,14 @@
 import React from 'react';
 import './css/App.css';
-import Header from './components/header';
-import Category from './components/categories';
-import Cart from './components/cart';
-import Product from './components/product';
-import Error from './components/page-components/error';
-import Front from './components/page-components/front';
+import Header from './Components/header';
+import Category from './Components/Categories';
+import Cart from './Components/cart';
+import Product from './Components/product';
+import Error from './Components/page-components/error';
+import Front from './Components/page-components/front';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 class App extends React.Component {
-
   constructor(props) {
     super(props)
     this.state = {
@@ -35,15 +34,13 @@ class App extends React.Component {
   componentDidMount() {
     this.setHistory('/')
     this.calculateSum();
-    // using local storage to prevent data loss if page refreashed
+    // using local storage to prevent data loss if page refreshed
     let localState = JSON.parse(localStorage.getItem('app-state'));
     if(localState) this.setState(localState);
   }
 
   componentDidUpdate(prevProps, prevState) {
-
     localStorage.setItem('app-state', JSON.stringify(this.state));
-
     if(prevState.activeCurrency !== this.state.activeCurrency) {
       this.calculateSum();
     }
@@ -61,7 +58,6 @@ class App extends React.Component {
   symbolHandle(val) {
     this.setState({symbol : val});
   }
-  
 
   addToCart = params => {
     const {id, price, attrArray, index, attrIndex, value, increment, decrement, changeParam} = params;
@@ -107,7 +103,6 @@ class App extends React.Component {
 
     this.setState({ cart : [{ id: id, price: price, num: 1, attr : attrArray }, ...cartArray] })
     return
-
   }
 
   categoryFilter = setCategory => {

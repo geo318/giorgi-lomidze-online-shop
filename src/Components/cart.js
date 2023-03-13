@@ -1,8 +1,8 @@
 import React, {Component} from "react";
-import fetchQuery from '../querries/fetchQuery';
+import fetchQuery from '../queries/fetchQuery';
 import Carousel from "./page-components/carousel";
 import { Link } from 'react-router-dom';
-import { ProductDetailsQuery } from "../querries/querries";
+import { ProductDetailsQuery } from "../queries/queries";
 import Attributes from "./page-components/attributes";
 import Price from "./page-components/price";
 import Loading from "./page-components/loading";
@@ -32,7 +32,6 @@ export default class Cart extends Component {
         if(prevProps.num !== this.props.num || this.state.render !== prevState.render)
             return this.fetchCartItems();
     }
-
 
     removeCartItems(index) {
         this.setState({ data : [...this.state.data.slice(0, 
